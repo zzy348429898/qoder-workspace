@@ -1,0 +1,22 @@
+{
+  "name": "langgraph-01-basic-chatbot",
+  "version": "1.0.0",
+  "description": "LangGraph.js 项目1：基础聊天机器人 - 学习 StateGraph、Node、Edge、State 核心概念",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "verify": "tsx src/verify.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^0.3.0",
+    "@langchain/core": "^0.3.0",
+    "@langchain/langgraph": "^0.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.6.0"
+  }
+}
