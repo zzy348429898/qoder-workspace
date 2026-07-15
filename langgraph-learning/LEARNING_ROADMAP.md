@@ -10,8 +10,8 @@
 | 阶段 | 项目编号 | 项目名称 | 核心概念 | 状态 |
 |------|---------|---------|---------|------|
 | 一 | 01 | 基础聊天机器人 | State · Reducer · Node · Edge · compile · invoke · stream | ✅ 已完成 |
-| 二 | 02 | 条件边与动态路由 | ConditionalEdge · 路由函数 · 动态分支 | ⬜ 未开始 |
-| 二 | 03 | 工具调用与 Function Calling | ToolNode · ToolMessage · bindTools | ⬜ 未开始 |
+| 二 | 02 | 条件边与动态路由 | ConditionalEdge · 路由函数 · 动态分支 | ✅ 已完成 |
+| 二 | 03 | 工具调用与 Function Calling | ToolNode · ToolMessage · bindTools | ✅ 已完成 |
 | 二 | 04 | ReAct 智能体 | Agent 循环 · 工具调用循环 · ToolNode 集成 | ⬜ 未开始 |
 | 三 | 05 | 记忆与持久化 | Checkpoint · MemorySaver · 线程ID · 状态恢复 | ⬜ 未开始 |
 | 三 | 06 | 人机交互（Human-in-the-Loop） | interrupt · Command · 人审审批 · 恢复执行 | ⬜ 未开始 |
@@ -54,7 +54,7 @@ START → chatbot → END
 
 ## 阶段二：路由与工具 ⬜
 
-### 项目 02：条件边与动态路由
+### 项目 02：条件边与动态路由 ✅ 已完成
 
 **目录**：`project-02-conditional-edges/`
 
@@ -81,9 +81,28 @@ START → "router" ──┼→ "weather"   → END
 3. 为不同意图编写不同处理节点
 4. 用 `addConditionalEdges` 连接路由
 
+**已掌握的核心概念**：
+- **ConditionalEdge（条件边）** — 根据当前 State 动态决定下一个执行的节点
+- **路由函数** — `(state) => "nodeName"`，返回目标节点名
+- **addConditionalEdges** — 注册条件边，支持函数模式和 pathMap 映射表模式
+- **动态分支** — 一个节点根据条件走向不同的后续节点（greeting/weather/math/fallback）
+- **pathMap** — 条件边的目标映射表，用于约束路由目标 + 文档化
+
+**图结构**：
+```
+                        ┌──→ "greeting"  ──→ END
+                        ├──→ "weather"   ──→ END
+     START ──→ "classify" ──┼──→ "math"     ──→ END
+                        └──→ "fallback"  ──→ END
+```
+
+**关键文件**：
+- `src/index.ts` — 完整实现（LLM 意图分类 + 4个处理器 + 条件边路由 + 交互式聊天）
+- `src/verify.ts` — Mock 模式验证脚本（8个测试，无需 API Key）
+
 ---
 
-### 项目 03：工具调用与 Function Calling
+### 项目 03：工具调用与 Function Calling ✅ 已完成
 
 **目录**：`project-03-tools-function-calling/`
 
@@ -111,6 +130,25 @@ START → "agent" → (有工具调用?) ──是→ "tools" → "agent" (循�
 3. 编写 agent 节点（调用 LLM，检查是否有 tool_calls）
 4. 使用 ToolNode 执行工具
 5. 用条件边实现 agent ↔ tools 的循环
+
+**已掌握的核心概念**：
+- **Tool（工具）** — 用 `tool()` 函数 + zod schema 定义，包含 name、description、schema 三要素
+- **bindTools()** — 将工具绑定到 LLM，LLM 根据描述决定是否调用工具
+- **AIMessage.tool_calls** — LLM 返回的工具调用请求（工具名 + 参数 + ID）
+- **ToolMessage** — 工具执行结果，通过 `tool_call_id` 与 AIMessage 匹配
+- **ToolNode** — LangGraph 内置节点，自动执行 tool_calls 并返回 ToolMessage
+- **toolsCondition** — LangGraph 内置路由函数，检查是否有 tool_calls 决定路由
+- **MessagesAnnotation** — LangGraph 内置 State，自动处理 messages 的拼接 reducer
+
+**图结构**：
+```
+START → "agent" → (有 tool_calls?) ──是→ "tools" → "agent" (循环)
+                              └─否→ END
+```
+
+**关键文件**：
+- `src/index.ts` — 完整实现（3个工具定义 + bindTools + ToolNode + agent循环 + 交互式聊天）
+- `src/verify.ts` — Mock 模式验证脚本（9个测试，无需 API Key）
 
 ---
 
