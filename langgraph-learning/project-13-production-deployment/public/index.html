@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LangGraph 项目13：流式聊天</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "PingFang SC", sans-serif;
+      background: #0f172a; color: #e2e8f0;
+      display: flex; justify-content: center; padding: 24px;
+    }
+    .container { width: 100%; max-width: 720px; }
+    h1 { font-size: 18px; margin-bottom: 4px; }
+    .subtitle { color: #64748b; font-size: 13px; margin-bottom: 16px; }
+    #messages {
+      background: #1e293b; border-radius: 12px; padding: 16px;
+      height: 420px; overflow-y: auto; margin-bottom: 12px;
+    }
+    .msg { margin-bottom: 12px; padding: 10px 14px; border-radius: 10px; line-height: 1.6; white-space: pre-wrap; }
+    .user { background: #334155; text-align: right; }
+    .ai { background: #0c4a6e; }
+    .meta { font-size: 11px; color: #94a3b8; margin-bottom: 4px; }
+    #inputRow { display: flex; gap: 8px; }
+    #input {
+      flex: 1; padding: 12px 16px; border-radius: 10px; border: 1px solid #334155;
+      background: #1e293b; color: #e2e8f0; font-size: 14px; outline: none;
+    }
+    button {
+      padding: 12px 20px; border-radius: 10px; border: none; cursor: pointer;
+      background: #0284c7; color: white; font-size: 14px;
+    }
+    button:disabled { background: #334155; cursor: not-allowed; }
+    .cursor { display: inline-block; width: 8px; background: #38bdf8; animation: blink 0.8s infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>LangGraph 流式聊天</h1>
+    <div class="subtitle">POST /chat 或 GET /chat/stream（SSE token 流） · 项目13</div>
+    <div id="messages"></div>
+    <div id="inputRow">
+      <input id="input" placeholder="输入消息，回车发送（流式）..." autofocus>
+      <button id="sendStream">流式发送</button>
+      <button id="sendSync">同步发送</button>
+    </div>
+  </div>
+
+  <script>
+    const messagesEl = document.getElementById("messages");
+    const inputEl = document.getElementById("input");
+
+    function addMsg(role, text) {
+      const div = document.createElement("div");
+      div.className = `msg ${role}`;
+      div.innerHTML = `<div class="meta">${role === "user" ? "👤 你" : "🤖 AI"}</div><span class="text"></span>`;
+      div.querySelector(".text").textContent = text;
+      messagesEl.appendChild(div);
+      messagesEl.scrollTop = messagesEl.scrollHeight;
+      return div.querySelector(".text");
+    }
+
+    // ★ 流式发送：EventSource 接收 SSE token 流
+    async function sendStream(text) {
+      const aiEl = addMsg("ai", "");
+      const cursor = document.createElement("span");
+      cursor.className = "cursor";
+      cursor.innerHTML = "&nbsp;";
+      aiEl.appendChild(cursor);
+
+      // EventSource 是浏览器原生 SSE 客户端
+      const es = new EventSource(`/chat/stream?q=${encodeURIComponent(text)}`);
+      es.onmessage = (event) => {
+        if (event.data === "[DONE]") {
+          es.close();
+          cursor.remove();
+          return;
+        }
+        const payload = JSON.parse(event.data);
+        if (payload.error) {
+          aiEl.textContent = "⚠️ " + payload.error;
+          es.close();
+          cursor.remove();
+          return;
+        }
+        // token 级追加
+        cursor.before(document.createTextNode(payload.content));
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+      };
+      es.onerror = () => { es.close(); cursor.remove(); };
+    }
+
+    // 同步发送：POST /chat 一次性返回
+    async function sendSync(text) {
+      const aiEl = addMsg("ai", "……");
+      const res = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text }),
+      });
+      const data = await res.json();
+      aiEl.textContent = data.reply ?? ("⚠️ " + (data.error ?? "未知错误"));
+    }
+
+    function submit(mode) {
+      const text = inputEl.value.trim();
+      if (!text) return;
+      addMsg("user", text);
+      inputEl.value = "";
+      mode === "stream" ? sendStream(text) : sendSync(text);
+    }
+
+    document.getElementById("sendStream").onclick = () => submit("stream");
+    document.getElementById("sendSync").onclick = () => submit("sync");
+    inputEl.onkeydown = (e) => { if (e.key === "Enter") submit("stream"); };
+  </script>
+</body>
+</html>

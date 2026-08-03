@@ -12,16 +12,16 @@
 | 一 | 01 | 基础聊天机器人 | State · Reducer · Node · Edge · compile · invoke · stream | ✅ 已完成 |
 | 二 | 02 | 条件边与动态路由 | ConditionalEdge · 路由函数 · 动态分支 | ✅ 已完成 |
 | 二 | 03 | 工具调用与 Function Calling | ToolNode · ToolMessage · bindTools | ✅ 已完成 |
-| 二 | 04 | ReAct 智能体 | Agent 循环 · 工具调用循环 · ToolNode 集成 | ⬜ 未开始 |
-| 三 | 05 | 记忆与持久化 | Checkpoint · MemorySaver · 线程ID · 状态恢复 | ⬜ 未开始 |
-| 三 | 06 | 人机交互（Human-in-the-Loop） | interrupt · Command · 人审审批 · 恢复执行 | ⬜ 未开始 |
-| 四 | 07 | 子图与组合 | Subgraph · 图嵌套 · 状态映射 | ⬜ 未开始 |
-| 四 | 08 | 并行执行与 Map-Reduce | 并行边 · Send · 动态扇出 · 结果聚合 | ⬜ 未开始 |
-| 四 | 09 | 复杂路由与状态机 | 多条件路由 · 循环图 · 状态机模式 | ⬜ 未开始 |
-| 五 | 10 | 多智能体 Supervisor | Supervisor 模式 · Agent 分工 · 任务分发 | ⬜ 未开始 |
-| 五 | 11 | 多智能体协作 | Agent 通信 · 消息传递 · 协作模式 | ⬜ 未开始 |
-| 六 | 12 | RAG 检索增强生成 | 检索节点 · 向量存储 · 知识图谱集成 | ⬜ 未开始 |
-| 六 | 13 | 生产部署与流式 UI | LangGraph Studio · 流式 UI · 部署 · 监控 | ⬜ 未开始 |
+| 二 | 04 | ReAct 智能体 | Agent 循环 · 工具调用循环 · ToolNode 集成 | ✅ 已完成 |
+| 三 | 05 | 记忆与持久化 | Checkpoint · MemorySaver · 线程ID · 状态恢复 | ✅ 已完成 |
+| 三 | 06 | 人机交互（Human-in-the-Loop） | interrupt · Command · 人审审批 · 恢复执行 | ✅ 已完成 |
+| 四 | 07 | 子图与组合 | Subgraph · 图嵌套 · 状态映射 | ✅ 已完成 |
+| 四 | 08 | 并行执行与 Map-Reduce | 并行边 · Send · 动态扇出 · 结果聚合 | ✅ 已完成 |
+| 四 | 09 | 复杂路由与状态机 | 多条件路由 · 循环图 · 状态机模式 | ✅ 已完成 |
+| 五 | 10 | 多智能体 Supervisor | Supervisor 模式 · Agent 分工 · 任务分发 | ✅ 已完成 |
+| 五 | 11 | 多智能体协作 | Agent 通信 · 消息传递 · 协作模式 | ✅ 已完成 |
+| 六 | 12 | RAG 检索增强生成 | 检索节点 · 向量存储 · 知识图谱集成 | ✅ 已完成 |
+| 六 | 13 | 生产部署与流式 UI | LangGraph Studio · 流式 UI · 部署 · 监控 | ✅ 已完成 |
 
 ---
 
@@ -52,7 +52,7 @@ START → chatbot → END
 
 ---
 
-## 阶段二：路由与工具 ⬜
+## 阶段二：路由与工具 ✅
 
 ### 项目 02：条件边与动态路由 ✅ 已完成
 
@@ -152,7 +152,7 @@ START → "agent" → (有 tool_calls?) ──是→ "tools" → "agent" (循环
 
 ---
 
-### 项目 04：ReAct 智能体
+### 项目 04：ReAct 智能体 ✅ 已完成
 
 **目录**：`project-04-react-agent/`
 
@@ -179,11 +179,23 @@ START → "agent" ⇄ "tools"
 4. 用 `createReactAgent()` 快速实现同样功能，对比差异
 5. 增加最大迭代次数限制（防止无限循环）
 
+**已掌握的核心概念**：
+- **ReAct 四阶段** — Thought（思考）→ Action（工具调用）→ Observation（工具结果）→ Answer（最终回答）
+- **自定义 State 扩展** — 在 MessagesAnnotation 消息列表外增加 iterationCount 迭代计数字段
+- **双终止条件** — ① LLM 不再请求工具（正常结束）② iterationCount 达到上限（强制结束，防无限循环）
+- **手写路由函数** — shouldContinue 替代内置 toolsCondition，掌握终止条件的本质
+- **createReactAgent** — 内置工厂函数，5 行代码实现同等功能（llm + tools + prompt 三参数）
+- **多步推理** — 复杂问题自动串联多个工具（search → calculator → 回答）
+
+**关键文件**：
+- `src/index.ts` — 完整实现（手动 ReAct + createReactAgent 对比 + 4个工具 + 最大迭代限制）
+- `src/verify.ts` — Mock 模式验证脚本（9个测试，含无限循环终止、createReactAgent 一致性验证，无需 API Key）
+
 ---
 
-## 阶段三：记忆与状态管理 ⬜
+## 阶段三：记忆与状态管理 ✅
 
-### 项目 05：记忆与持久化
+### 项目 05：记忆与持久化 ✅ 已完成
 
 **目录**：`project-05-checkpoint-memory/`
 
@@ -206,9 +218,13 @@ START → "agent" ⇄ "tools"
 4. 用 `getStateHistory()` 查看状态历史
 5. 实现时间旅行——从历史状态恢复执行
 
+**关键文件**：
+- `src/index.ts` — 完整实现（thread_id 自动多轮记忆 + 多会话隔离 + getStateHistory + 时间旅行演示）
+- `src/verify.ts` — Mock 模式验证脚本（6个测试，含会话隔离、快照递增、checkpoint 恢复，无需 API Key）
+
 ---
 
-### 项目 06：人机交互（Human-in-the-Loop）
+### 项目 06：人机交互（Human-in-the-Loop） ✅ 已完成
 
 **目录**：`project-06-human-in-the-loop/`
 
@@ -238,11 +254,15 @@ START → "agent" → "review" (interrupt) → 等待人工审批
 4. 实现审批通过/拒绝两种恢复路径
 5. （进阶）实现人工编辑 State 后恢复
 
+**关键文件**：
+- `src/index.ts` — 完整实现（工具调用前 interrupt 审批 + Command resume 批准/拒绝两条恢复路径）
+- `src/verify.ts` — Mock 模式验证脚本（6个测试，含中断冻结、tasks[].interrupts 读取、双路径恢复，无需 API Key）
+
 ---
 
-## 阶段四：高级图模式 ⬜
+## 阶段四：高级图模式 ✅
 
-### 项目 07：子图与组合
+### 项目 07：子图与组合 ✅ 已完成
 
 **目录**：`project-07-subgraphs/`
 
@@ -262,9 +282,13 @@ START → "agent" → "review" (interrupt) → 等待人工审批
 3. 将两个子图组合到父图中
 4. 处理子图与父图的 State 共享与隔离
 
+**关键文件**：
+- `src/index.ts` — 完整实现（research/writing 双子图组合 + 状态共享与隔离 + subgraphs:true 观察）
+- `src/verify.ts` — Mock 模式验证脚本（5个测试，含子图内部轨迹、私有字段隔离验证，无需 API Key）
+
 ---
 
-### 项目 08：并行执行与 Map-Reduce
+### 项目 08：并行执行与 Map-Reduce ✅ 已完成
 
 **目录**：`project-08-parallel-map-reduce/`
 
@@ -291,9 +315,13 @@ START → "fanout" ┼→ "worker_2" ─┼→ "aggregate" → END
 3. 实现 Map-Reduce：多个 worker 并行处理 → 聚合结果
 4. 实践场景：并行总结多篇文章
 
+**关键文件**：
+- `src/index.ts` — 完整实现（静态并行三视角分析 + Send 动态扇出并行总结 + 聚合成报道）
+- `src/verify.ts` — Mock 模式验证脚本（5个测试，含拼接 Reducer、隐式同步点、并行耗时验证，无需 API Key）
+
 ---
 
-### 项目 09：复杂路由与状态机
+### 项目 09：复杂路由与状态机 ✅ 已完成
 
 **目录**：`project-09-complex-routing/`
 
@@ -312,11 +340,15 @@ START → "fanout" ┼→ "worker_2" ─┼→ "aggregate" → END
 2. 用条件边控制循环退出
 3. 实现一个简单的客服状态机（等待 → 处理 → 转人工 → 结束）
 
+**关键文件**：
+- `src/index.ts` — 完整实现（迭代优化循环图 + 客服状态机图，双路由设计）
+- `src/verify.ts` — Mock 模式验证脚本（5个测试，含达标/上限双退出、转人工循环路径，无需 API Key）
+
 ---
 
-## 阶段五：多智能体 ⬜
+## 阶段五：多智能体 ✅
 
-### 项目 10：多智能体 Supervisor
+### 项目 10：多智能体 Supervisor ✅ 已完成
 
 **目录**：`project-10-multi-agent-supervisor/`
 
@@ -343,9 +375,13 @@ START → "supervisor" ┼→ "writer_agent" ──┼→ "supervisor" → END
 3. 实现 Supervisor ↔ Agents 的循环
 4. 实现 Supervisor 决定何时结束任务
 
+**关键文件**：
+- `src/index.ts` — 完整实现（NEXT:/FINISH 决策协议 + createReactAgent 子 Agent + 回环分发）
+- `src/verify.ts` — Mock 模式验证脚本（5个测试，含决策序列、子 Agent ReAct 循环、name 标记，无需 API Key）
+
 ---
 
-### 项目 11：多智能体协作
+### 项目 11：多智能体协作 ✅ 已完成
 
 **目录**：`project-11-multi-agent-collaboration/`
 
@@ -364,11 +400,15 @@ START → "supervisor" ┼→ "writer_agent" ──┼→ "supervisor" → END
 2. 实现层级模式（顶层 Supervisor 管理子 Supervisor）
 3. 实践场景：软件开发团队（PM → 开发 + 测试 → 部署）
 
+**关键文件**：
+- `src/index.ts` — 完整实现（pm⇄dev 对话协作 + 层级模式（子团队图作顶层节点））
+- `src/verify.ts` — Mock 模式验证脚本（4个测试，含交替接管、turnCount 子图私有轮次控制，无需 API Key）
+
 ---
 
-## 阶段六：实战应用 ⬜
+## 阶段六：实战应用 ✅
 
-### 项目 12：RAG 检索增强生成
+### 项目 12：RAG 检索增强生成 ✅ 已完成
 
 **目录**：`project-12-rag-application/`
 
@@ -395,9 +435,13 @@ START → "retrieve" → "grade_documents" → (相关?) ──是→ "generate"
 4. 实现生成节点（基于检索结果生成回答）
 5. 用条件边和循环实现自适应 RAG
 
+**关键文件**：
+- `src/index.ts` — 完整实现（MemoryVectorStore + 确定性 Embeddings + 自适应 RAG 循环）
+- `src/verify.ts` — Mock 模式验证脚本（6个测试，含检索质量、重写循环、上限兜底，无需 API Key）
+
 ---
 
-### 项目 13：生产部署与流式 UI
+### 项目 13：生产部署与流式 UI ✅ 已完成
 
 **目录**：`project-13-production-deployment/`
 
@@ -417,6 +461,13 @@ START → "retrieve" → "grade_documents" → (相关?) ──是→ "generate"
 2. 将图部署为 REST API（LangGraph Server / 自定义 Express）
 3. 实现流式输出对接简单 Web UI
 4. 添加日志和状态追踪
+
+**关键文件**：
+- `src/graph.ts` — 图定义（图与服务分离，可被 LangGraph Studio 直接使用）
+- `src/index.ts` — Express 服务（/health、POST /chat、GET /chat/stream SSE + 监控中间件）
+- `public/index.html` — 聊天 UI（EventSource 接收 SSE token 流）
+- `langgraph.json` — LangGraph Studio 配置
+- `src/verify.ts` — Mock 模式验证脚本（5个测试，真实 HTTP 服务的端到端测试，无需 API Key）
 
 ---
 

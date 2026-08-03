@@ -1,0 +1,19 @@
+{
+  "name": "langgraph-12-rag-application",
+  "version": "1.0.0",
+  "description": "LangGraph.js 项目12：RAG 检索增强生成 - 学习检索节点、向量存储、自适应 RAG",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "verify": "tsx src/verify.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "catalog:",
+    "@langchain/core": "catalog:",
+    "@langchain/langgraph": "catalog:",
+    "langchain": "catalog:",
+    "zod": "catalog:"
+  }
+}

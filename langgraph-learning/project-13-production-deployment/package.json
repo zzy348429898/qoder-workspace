@@ -1,0 +1,18 @@
+{
+  "name": "langgraph-13-production-deployment",
+  "version": "1.0.0",
+  "description": "LangGraph.js 项目13：生产部署与流式 UI - 学习 LangGraph Studio、流式 UI、部署、监控",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "verify": "tsx src/verify.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "catalog:",
+    "@langchain/core": "catalog:",
+    "@langchain/langgraph": "catalog:",
+    "express": "catalog:"
+  }
+}

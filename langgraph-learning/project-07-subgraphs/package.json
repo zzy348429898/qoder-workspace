@@ -1,0 +1,17 @@
+{
+  "name": "langgraph-07-subgraphs",
+  "version": "1.0.0",
+  "description": "LangGraph.js 项目7：子图与组合 - 学习 Subgraph、图嵌套、状态映射",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "verify": "tsx src/verify.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "catalog:",
+    "@langchain/core": "catalog:",
+    "@langchain/langgraph": "catalog:"
+  }
+}

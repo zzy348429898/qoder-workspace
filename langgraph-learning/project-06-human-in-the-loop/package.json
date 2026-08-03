@@ -1,0 +1,18 @@
+{
+  "name": "langgraph-06-human-in-the-loop",
+  "version": "1.0.0",
+  "description": "LangGraph.js 项目6：人机交互（Human-in-the-Loop）- 学习 interrupt、Command、人审审批、恢复执行",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "verify": "tsx src/verify.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "catalog:",
+    "@langchain/core": "catalog:",
+    "@langchain/langgraph": "catalog:",
+    "zod": "catalog:"
+  }
+}

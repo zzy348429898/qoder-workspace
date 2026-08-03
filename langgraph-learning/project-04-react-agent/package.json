@@ -1,0 +1,18 @@
+{
+  "name": "langgraph-04-react-agent",
+  "version": "1.0.0",
+  "description": "LangGraph.js 项目4：ReAct 智能体 - 学习 ReAct 模式、Agent 循环、createReactAgent",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
+    "verify": "tsx src/verify.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "catalog:",
+    "@langchain/core": "catalog:",
+    "@langchain/langgraph": "catalog:",
+    "zod": "catalog:"
+  }
+}
