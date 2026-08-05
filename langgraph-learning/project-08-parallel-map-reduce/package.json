@@ -4,8 +4,8 @@
   "description": "LangGraph.js 项目8：并行执行与 Map-Reduce - 学习并行边、Send、动态扇出、结果聚合",
   "type": "module",
   "scripts": {
-    "start": "tsx src/index.ts",
-    "dev": "tsx watch src/index.ts",
+    "start": "tsx --env-file-if-exists=../.env src/index.ts",
+    "dev": "tsx watch --env-file-if-exists=../.env src/index.ts",
     "verify": "tsx src/verify.ts",
     "typecheck": "tsc --noEmit"
   },

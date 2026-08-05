@@ -4,8 +4,8 @@
   "description": "LangGraph.js 项目12：RAG 检索增强生成 - 学习检索节点、向量存储、自适应 RAG",
   "type": "module",
   "scripts": {
-    "start": "tsx src/index.ts",
-    "dev": "tsx watch src/index.ts",
+    "start": "tsx --env-file-if-exists=../.env src/index.ts",
+    "dev": "tsx watch --env-file-if-exists=../.env src/index.ts",
     "verify": "tsx src/verify.ts",
     "typecheck": "tsc --noEmit"
   },

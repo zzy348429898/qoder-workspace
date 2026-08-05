@@ -4,8 +4,8 @@
   "description": "LangGraph.js 项目2：条件边与动态路由 - 学习 ConditionalEdge、路由函数、动态分支",
   "type": "module",
   "scripts": {
-    "start": "tsx src/index.ts",
-    "dev": "tsx watch src/index.ts",
+    "start": "tsx --env-file-if-exists=../.env src/index.ts",
+    "dev": "tsx watch --env-file-if-exists=../.env src/index.ts",
     "verify": "tsx src/verify.ts",
     "typecheck": "tsc --noEmit"
   },
