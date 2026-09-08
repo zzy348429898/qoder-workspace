@@ -1,7 +1,0 @@
-node_modules
-
-# Environment variables
-.env
-.env.*
-# Keep example template tracked
-!.env.example
