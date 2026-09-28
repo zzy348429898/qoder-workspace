@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../code/abi/abi-platform"
+		},
+		{
+			"path": "../code/control_plane"
+		},
+		{
+			"path": "../code/kingdee-lingee"
+		}
+	],
+	"settings": {}
+}

@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1210" viewBox="0 0 960 1210">
+  <rect x="0" y="0" width="960" height="1210" fill="#f8fafc"/>
+
+  <!-- 标题 -->
+  <text x="480" y="34" text-anchor="middle" font-size="20" font-weight="bold" fill="#0f172a">一张折旧单拆成 4 张表（跟着 1 张资产卡片走一遍）</text>
+  <text x="480" y="56" text-anchor="middle" font-size="12" fill="#475569">诀窍：哪个"同色块的同一个值"出现在两张表里，它就是连接绳</text>
+  <text x="480" y="74" text-anchor="middle" font-size="11" fill="#475569">图例：<tspan fill="#1d4ed8" font-weight="bold">■ 蓝 = 单据ID</tspan>　<tspan fill="#c2410c" font-weight="bold">■ 橙 = 卡片编号</tspan>　<tspan fill="#0f766e" font-weight="bold">■ 青 = 行号</tspan>　<tspan fill="#15803d" font-weight="bold">■ 绿 = 过滤条件</tspan>　<tspan fill="#92400e" font-weight="bold">■ 金 = 金额</tspan></text>
+
+  <!-- ============ 表① 抬头 ============ -->
+  <rect x="60" y="88" width="840" height="152" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="61" y="89" width="838" height="40" rx="9" fill="#1d4ed8"/>
+  <rect x="61" y="107" width="838" height="22" fill="#1d4ed8"/>
+  <text x="76" y="107" font-size="13" font-weight="bold" fill="#ffffff">① fa_depre_sum ｜ 折旧单主表 —— 单据的"抬头"</text>
+  <text x="76" y="123" font-size="10" fill="#bfdbfe">一张单在这里占一行：谁家的单、哪一期、什么政策</text>
+
+  <text x="76" y="153" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#334155">id</text>
+  <rect x="310" y="138" width="165" height="20" rx="4" fill="#dbeafe"/>
+  <text x="318" y="152" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#1d4ed8">2567578074681976832</text>
+  <text x="490" y="152" font-size="10.5" fill="#64748b">单据ID —— 后面 3 张表都靠它挂进来</text>
+
+  <text x="76" y="181" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#334155">org_id</text>
+  <rect x="310" y="166" width="165" height="20" rx="4" fill="#dcfce7"/>
+  <text x="318" y="180" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#15803d">2567460264509193216</text>
+  <text x="490" y="180" font-size="10.5" fill="#15803d" font-weight="bold">= 金蝶蓝海11号公司 ← 你的过滤点 1</text>
+
+  <text x="76" y="209" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#334155">period / policy</text>
+  <text x="310" y="209" font-size="11.5" fill="#0f172a">2026年4期 · lzr-02 · 人民币 · 单据号 ZCZJ-202604-000969</text>
+  <text x="490" y="228" font-size="10.5" fill="#64748b">（期间、政策、币别也从这里取）</text>
+
+  <!-- 箭头 ①→② -->
+  <line x1="480" y1="240" x2="480" y2="286" stroke="#334155" stroke-width="2.5" marker-end="url(#arr)"/>
+  <text x="495" y="260" font-size="11" fill="#334155">1 张单 ： N 行</text>
+  <text x="495" y="276" font-size="11" fill="#334155">靠同一个 <tspan font-weight="bold" fill="#1d4ed8">蓝·单据ID</tspan> 连接</text>
+
+  <!-- ============ 表② 明细行 ============ -->
+  <rect x="60" y="290" width="840" height="180" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="61" y="291" width="838" height="40" rx="9" fill="#0f766e"/>
+  <rect x="61" y="309" width="838" height="22" fill="#0f766e"/>
+  <text x="76" y="309" font-size="13" font-weight="bold" fill="#ffffff">② assentry ｜ 分录行 —— 单据里的"一行"</text>
+  <text x="76" y="325" font-size="10" fill="#ccfbf1">一行 = 一张资产卡片本次提折旧（这家公司共 309 行）</text>
+
+  <text x="76" y="355" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#334155">id</text>
+  <rect x="310" y="340" width="165" height="20" rx="4" fill="#dbeafe"/>
+  <text x="318" y="354" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#1d4ed8">2567578074681976832</text>
+  <text x="490" y="354" font-size="10.5" fill="#64748b">← 挂在 ① 那张单下</text>
+
+  <text x="76" y="383" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#334155">assentry_id</text>
+  <rect x="310" y="368" width="165" height="20" rx="4" fill="#ccfbf1"/>
+  <text x="318" y="382" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#0f766e">2567631399947357232</text>
+  <text x="490" y="382" font-size="10.5" fill="#64748b">这行自己的"行号" —— 表④靠它挂进来</text>
+
+  <text x="76" y="411" font-family="Menlo,Consolas,monospace" font-size="10.5" fill="#334155">…copyrealcard_number</text>
+  <text x="310" y="411" font-size="11.5" fill="#0f172a">BU-18227%F01-010260300001</text>
+  <text x="490" y="411" font-size="10.5" fill="#64748b">资产编码（房屋及建筑物01 · 分摊比例 100%）</text>
+
+  <text x="76" y="439" font-family="Menlo,Consolas,monospace" font-size="10.5" fill="#334155">…copyrealcard_billno</text>
+  <rect x="310" y="424" width="160" height="20" rx="4" fill="#ffedd5"/>
+  <text x="318" y="438" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#c2410c">202603010260300301</text>
+  <text x="490" y="438" font-size="10.5" fill="#64748b">卡片编号 —— 和表③配对用</text>
+
+  <!-- 箭头 ②→③ -->
+  <line x1="480" y1="470" x2="480" y2="516" stroke="#334155" stroke-width="2.5" marker-end="url(#arr)"/>
+  <text x="495" y="490" font-size="11" fill="#334155">1 ： 1</text>
+  <text x="495" y="506" font-size="11" fill="#334155">拿 <tspan font-weight="bold" fill="#1d4ed8">蓝·单据ID</tspan> ＋ <tspan font-weight="bold" fill="#c2410c">橙·卡片编号</tspan> 去表③对号</text>
+
+  <!-- ============ 表③ 金额 ============ -->
+  <rect x="60" y="520" width="840" height="170" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="61" y="521" width="838" height="40" rx="9" fill="#b45309"/>
+  <rect x="61" y="539" width="838" height="22" fill="#b45309"/>
+  <text x="76" y="539" font-size="13" font-weight="bold" fill="#ffffff">③ deprsum ｜ 金额表 —— 这行该提多少钱</text>
+  <text x="76" y="555" font-size="10" fill="#fde68a">金额只认这张表：deprsum_depr</text>
+
+  <text x="76" y="585" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#334155">id</text>
+  <rect x="310" y="570" width="165" height="20" rx="4" fill="#dbeafe"/>
+  <text x="318" y="584" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#1d4ed8">2567578074681976832</text>
+  <text x="490" y="584" font-size="10.5" fill="#64748b">← 和表②同一张单</text>
+
+  <text x="76" y="613" font-family="Menlo,Consolas,monospace" font-size="10.5" fill="#334155">…assetcard_billno</text>
+  <rect x="310" y="598" width="160" height="20" rx="4" fill="#ffedd5"/>
+  <text x="318" y="612" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#c2410c">202603010260300301</text>
+  <text x="490" y="612" font-size="10.5" fill="#64748b">← 和表②同一张卡（两个一起用，才不会串行）</text>
+
+  <text x="76" y="641" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#334155">deprsum_depr</text>
+  <rect x="310" y="626" width="60" height="20" rx="4" fill="#fef3c7"/>
+  <text x="318" y="640" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#92400e">32.5</text>
+  <text x="490" y="640" font-size="10.5" font-weight="bold" fill="#92400e">★ 本期折旧额 —— 求和就用它</text>
+
+  <text x="76" y="670" font-family="Menlo,Consolas,monospace" font-size="10.5" fill="#b91c1c">⚠ assentry_splitamount</text>
+  <text x="310" y="670" font-size="10.5" fill="#b91c1c">不代表金额口径，别用它算钱</text>
+
+  <!-- 箭头 ③→④ -->
+  <line x1="480" y1="690" x2="480" y2="736" stroke="#334155" stroke-width="2.5" marker-end="url(#arr)"/>
+  <text x="495" y="710" font-size="11" fill="#334155">1 行 ： N 个对象</text>
+  <text x="495" y="726" font-size="11" fill="#334155">拿 <tspan font-weight="bold" fill="#0f766e">青·行号 assentry_id</tspan> 去看这笔钱算谁头上</text>
+
+  <!-- ============ 表④ 归属 ============ -->
+  <rect x="60" y="740" width="840" height="152" rx="10" fill="#ffffff" stroke="#7c3aed" stroke-width="2"/>
+  <rect x="61" y="741" width="838" height="40" rx="9" fill="#7c3aed"/>
+  <rect x="61" y="759" width="838" height="22" fill="#7c3aed"/>
+  <text x="76" y="759" font-size="13" font-weight="bold" fill="#ffffff">④ subentryentity ｜ 分摊对象 —— 这笔钱算谁头上 ★核心</text>
+  <text x="76" y="775" font-size="10" fill="#ddd6fe">部门过滤打在这里！不存名字，存（维度类型， 维度值ID）</text>
+
+  <text x="76" y="805" font-family="Menlo,Consolas,monospace" font-size="11.5" fill="#334155">assentry_id</text>
+  <rect x="310" y="790" width="165" height="20" rx="4" fill="#ccfbf1"/>
+  <text x="318" y="804" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#0f766e">2567631399947357232</text>
+  <text x="490" y="804" font-size="10.5" fill="#64748b">← 挂在 ② 的哪一行</text>
+
+  <text x="76" y="833" font-family="Menlo,Consolas,monospace" font-size="10" fill="#334155">…asstype1</text>
+  <text x="310" y="833" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#0f172a">'bos_org'</text>
+  <text x="490" y="833" font-size="10.5" fill="#64748b">维度类型 = 部门（另有 bd_supplier 供应商 / bos_user 人员）</text>
+
+  <text x="76" y="861" font-family="Menlo,Consolas,monospace" font-size="10" fill="#334155">…assid1</text>
+  <rect x="310" y="846" width="165" height="20" rx="4" fill="#dcfce7"/>
+  <text x="318" y="860" font-family="Menlo,Consolas,monospace" font-size="11.5" font-weight="bold" fill="#15803d">2164636528792445952</text>
+  <text x="490" y="860" font-size="10.5" font-weight="bold" fill="#15803d">= 基线一部 ← 你的过滤点 2</text>
+
+  <!-- 字典表 -->
+  <rect x="60" y="912" width="840" height="96" rx="10" fill="#f8fafc" stroke="#64748b" stroke-dasharray="5 4"/>
+  <text x="76" y="934" font-size="12" font-weight="bold" fill="#334155">📖 组织字典（表「行政组织（部门）」）—— 名字 ↔ ID 互查</text>
+  <text x="76" y="958" font-size="11" fill="#0f172a">金蝶蓝海11号公司 <tspan font-family="Menlo,Consolas,monospace" fill="#15803d" font-weight="bold">= 2567460264509193216</tspan>　　　　基线一部 <tspan font-family="Menlo,Consolas,monospace" fill="#15803d" font-weight="bold">= 2164636528792445952</tspan></text>
+  <text x="76" y="982" font-size="10.5" fill="#64748b">用户嘴里说的是名字，①～④里存的全是 ID —— 所以查询第一步永远是"查字典换 ID"（9-14 那次出错，就是跳过了这步）</text>
+
+  <!-- 结果框 -->
+  <rect x="60" y="1030" width="840" height="140" rx="10" fill="#f0fdf4" stroke="#86efac"/>
+  <text x="76" y="1054" font-size="13" font-weight="bold" fill="#166534">你的问题「查基线一部的折旧分摊」= 3 步</text>
+  <text x="76" y="1078" font-size="11.5" fill="#14532d">第1步　筛公司：① org_id = <tspan font-family="Menlo,Consolas,monospace">2567460264509193216</tspan></text>
+  <text x="76" y="1102" font-size="11.5" fill="#14532d">第2步　筛部门：④ asstype1='bos_org' 且 assid1 = <tspan font-family="Menlo,Consolas,monospace">2164636528792445952</tspan></text>
+  <text x="76" y="1126" font-size="11.5" fill="#14532d">第3步　取金额：③ deprsum_depr 按期间求和 → <tspan font-weight="bold">325 / 585 / 585 / 715</tspan>（政策自动只剩 lzr-02，即截图柱状图）</text>
+  <text x="76" y="1152" font-size="10.5" fill="#64748b">满足第2步的行全库共 34 行 —— 一行行把 ③ 的金额加起来，就是你看到的答案</text>
+
+  <text x="480" y="1196" text-anchor="middle" font-size="9.5" fill="#94a3b8">注：①②③ 的数值取自真实查询结果；④ 按"分摊给基线一部"的行展示（示例这张卡实际分摊给基线二部，机制完全相同）</text>
+
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+  </defs>
+</svg>
