@@ -1,0 +1,221 @@
+{
+  "info": {
+    "name": "主题选择-selectSubjects",
+    "_postman_id": "6f968662-75e7-4967-9e65-fe7ce96e8403",
+    "description": "ABI 主题选择 MCP 工具接口（AiService#selectSubjects）。",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "业务接口",
+      "item": [
+        {
+          "name": "主题选择",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "access_token",
+                "value": "{{access_token}}",
+                "type": "text",
+                "description": "自动鉴权变量；前置脚本自动获取并注入"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userQuery\": \"今年各供应商的到货及时率怎么样\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json",
+                  "contentType": "application/json"
+                }
+              }
+            },
+            "description": "主题选择 MCP 工具（selectSubjects，API ID 2545183096294932480，AiService#selectSubjects）。\n\n根据用户问题，从当前用户有权限且已开启问数的主题中选出候选主题。只读查询；前置脚本自动完成 getAppToken -> login 鉴权。\n\n请求体仅 userQuery（必填）：用户本次问题，保留业务意图和已明确的主题线索，不得自行添加限制条件。\n历史参数 sessionId / channel / dataSourceType 已于 0921 契约中废弃——服务端默认 KWORK 渠道、ABI 数据源。\n\n响应 data 为对象（或 TOON 编码字符串）：\n- selectedSubjects：与本次问题相关的候选主题，主题项含 subjectId / subjectName / dataSourceType / score / description / spaceId / spaceName / creatorName\n- allSubjects：当前用户可访问且已开启问数的全部主题，继承候选主题字段并含 subjectDescription\n- clarificationMessage：需要澄清时的提示消息\n候选为空不代表没有可访问主题；实际可用主题以返回结果为依据。\n\n业务错误（status=false + errorCode）：\n- ABI_AI_INVALID_PARAMETER：userQuery 为空\n- SubjectSelectionException：服务异常，提示用户手动选择主题",
+            "url": {
+              "raw": "{{baseUrl}}/kapi/v2/abi/ai/selectSubjects",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "kapi",
+                "v2",
+                "abi",
+                "ai",
+                "selectSubjects"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 业务接口自动鉴权：getAppToken -> login -> access_token 请求头",
+                  "function readVariable(name) {",
+                  "  var value = pm.environment.get(name);",
+                  "  if ((value === undefined || value === null || value === \"\") && pm.globals) {",
+                  "    value = pm.globals.get(name);",
+                  "  }",
+                  "  return value;",
+                  "}",
+                  "",
+                  "function responseJson(response, stepName) {",
+                  "  if (!response || response.code < 200 || response.code >= 300) {",
+                  "    throw new Error(stepName + \" 请求失败，HTTP 状态码：\" + (response ? response.code : \"无响应\"));",
+                  "  }",
+                  "  try {",
+                  "    var text = response.text();",
+                  "    return typeof text === \"string\" ? JSON.parse(text) : response.json();",
+                  "  } catch (error) {",
+                  "    try {",
+                  "      var json = response.json();",
+                  "      return typeof json === \"string\" ? JSON.parse(json) : json;",
+                  "    } catch (fallbackError) {",
+                  "      throw new Error(stepName + \" 响应不是合法 JSON：\" + fallbackError.message);",
+                  "    }",
+                  "  }",
+                  "}",
+                  "",
+                  "function responseField(json, fieldName) {",
+                  "  var data = json ? json.data : undefined;",
+                  "  if (typeof data === \"string\") {",
+                  "    try { data = JSON.parse(data); } catch (error) {}",
+                  "  }",
+                  "  if (data && data[fieldName] !== undefined) return data[fieldName];",
+                  "  return json ? json[fieldName] : undefined;",
+                  "}",
+                  "",
+                  "function currentEnvironmentSuffix() {",
+                  "  var baseUrl = String(pm.request.getBaseUrl() || \"\").replace(/\\/+$/, \"\");",
+                  "  var pathOnly = baseUrl.replace(/^https?:\\/\\/[^/]+/i, \"\");",
+                  "  var parts = pathOnly.split(\"/\").filter(function (part) { return Boolean(part); });",
+                  "  return parts.length ? parts[parts.length - 1] : pm.environment.name;",
+                  "}",
+                  "",
+                  "var currentPath = \"\";",
+                  "if (pm.request.url && typeof pm.request.url.getPath === \"function\") {",
+                  "  currentPath = pm.request.url.getPath();",
+                  "} else {",
+                  "  currentPath = String(pm.request.url || \"\");",
+                  "}",
+                  "var requestName = pm.info && pm.info.requestName ? pm.info.requestName : \"\";",
+                  "var isAuthApi = currentPath.indexOf(\"/api/getAppToken.do\") !== -1 ||",
+                  "  currentPath.indexOf(\"/api/login.do\") !== -1 ||",
+                  "  requestName === \"获取Apptoken\" || requestName === \"获取accessToken\";",
+                  "",
+                  "if (!isAuthApi) {",
+                  "  var cachedAccessToken = readVariable(\"access_token\");",
+                  "  var expiresAt = Number(readVariable(\"access_token_expires_at\") || 0);",
+                  "  var isExpired = expiresAt > 0 && Date.now() >= expiresAt;",
+                  "  var forceRefresh = String(readVariable(\"auth_force_refresh\") || \"false\").toLowerCase() === \"true\";",
+                  "",
+                  "  if (cachedAccessToken && !isExpired && !forceRefresh) {",
+                  "    pm.request.headers.upsert({ key: \"access_token\", value: cachedAccessToken });",
+                  "  } else {",
+                  "    var baseUrl = String(pm.request.getBaseUrl() || \"\").replace(/\\/+$/, \"\");",
+                  "    if (!baseUrl) throw new Error(\"无法读取当前环境的前置 URL\");",
+                  "",
+                  "    var appTokenBody = {",
+                  "      appId: readVariable(\"auth_app_id\"),",
+                  "      appSecret: readVariable(\"auth_app_secret\"),",
+                  "      tenantid: readVariable(\"auth_tenant_id\"),",
+                  "      accountId: readVariable(\"auth_account_id\")",
+                  "    };",
+                  "    if (!appTokenBody.tenantid) {",
+                  "      appTokenBody.domain = readVariable(\"auth_domain\");",
+                  "      appTokenBody.phone = readVariable(\"auth_phone\");",
+                  "      delete appTokenBody.tenantid;",
+                  "    }",
+                  "",
+                  "    pm.sendRequest({",
+                  "      url: baseUrl + \"/api/getAppToken.do\",",
+                  "      method: \"POST\",",
+                  "      header: { \"Content-Type\": \"application/json\", \"Accept\": \"application/json\" },",
+                  "      body: { mode: \"raw\", raw: JSON.stringify(appTokenBody) }",
+                  "    }, function (appError, appResponse) {",
+                  "      if (appError) throw new Error(\"getAppToken 请求失败：\" + appError);",
+                  "      var appJson = responseJson(appResponse, \"getAppToken\");",
+                  "      var appToken = responseField(appJson, \"app_token\");",
+                  "      if (!appToken) {",
+                  "        throw new Error(\"getAppToken 响应中不存在 data.app_token；响应：\" + JSON.stringify(appJson).slice(0, 500));",
+                  "      }",
+                  "      pm.environment.set(currentEnvironmentSuffix(), appToken);",
+                  "",
+                  "      var loginHeaders = { \"Content-Type\": \"application/json\", \"Accept\": \"application/json\" };",
+                  "      var loginHeaderToken = readVariable(\"login_access_token_header\");",
+                  "      if (loginHeaderToken) loginHeaders[\"access-token\"] = loginHeaderToken;",
+                  "",
+                  "      pm.sendRequest({",
+                  "        url: baseUrl + \"/api/login.do\",",
+                  "        method: \"POST\",",
+                  "        header: loginHeaders,",
+                  "        body: {",
+                  "          mode: \"raw\",",
+                  "          raw: JSON.stringify({ user: readVariable(\"auth_user\"), apptoken: appToken })",
+                  "        }",
+                  "      }, function (loginError, loginResponse) {",
+                  "        if (loginError) throw new Error(\"login 请求失败：\" + loginError);",
+                  "        var loginJson = responseJson(loginResponse, \"login\");",
+                  "        var loginData = loginJson && loginJson.data ? loginJson.data : {};",
+                  "        if (typeof loginData === \"string\") {",
+                  "          try { loginData = JSON.parse(loginData); } catch (error) { loginData = {}; }",
+                  "        }",
+                  "        var accessToken = responseField(loginJson, \"access_token\");",
+                  "        if (!accessToken) throw new Error(\"login 响应中不存在 data.access_token\");",
+                  "        var expiresIn = Number(loginData.expires_in || loginData.expiresIn || readVariable(\"auth_token_ttl_seconds\") || 0);",
+                  "        pm.environment.set(\"access_token\", accessToken);",
+                  "        pm.environment.set(\"access_token_expires_at\", expiresIn > 0 ? String(Date.now() + expiresIn * 1000) : \"\");",
+                  "        pm.request.headers.upsert({ key: \"access_token\", value: accessToken });",
+                  "      });",
+                  "    });",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// 发现鉴权失败时清空缓存，下一次请求会自动重新认证",
+                  "var unauthorized = pm.response.code === 401 || pm.response.code === 403;",
+                  "try {",
+                  "  var body = pm.response.json();",
+                  "  var businessCode = body.errorCode !== undefined ? body.errorCode :",
+                  "    (body.error_code !== undefined ? body.error_code : body.code);",
+                  "  unauthorized = unauthorized || String(businessCode) === \"401\" || String(businessCode) === \"403\";",
+                  "} catch (error) {",
+                  "  // 非 JSON 响应仅按 HTTP 状态码判断",
+                  "}",
+                  "if (unauthorized) {",
+                  "  // 不能使用 unset：环境变量存在初始值时，unset 后可能再次回退到旧值。",
+                  "  pm.environment.set(\"access_token\", \"\");",
+                  "  pm.environment.set(\"access_token_expires_at\", \"\");",
+                  "  console.warn(\"access_token 已失效并清空；下一次请求将自动重新获取\");",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "成功",
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"status\": true,\n  \"errorCode\": \"\",\n  \"message\": null,\n  \"data\": {\n    \"selectedSubjects\": [\n      {\n        \"subjectId\": \"3e9cc142-ef06-433e-967c-b5c7bd59ce7c\",\n        \"subjectName\": \"采购到货分析\",\n        \"dataSourceType\": \"ABI\",\n        \"score\": 95,\n        \"description\": \"供应商到货及时率、订单执行情况\",\n        \"spaceId\": \"1001\",\n        \"spaceName\": \"采购空间\",\n        \"creatorName\": \"张三\"\n      }\n    ],\n    \"allSubjects\": [\n      {\n        \"subjectId\": \"3e9cc142-ef06-433e-967c-b5c7bd59ce7c\",\n        \"subjectName\": \"采购到货分析\",\n        \"dataSourceType\": \"ABI\",\n        \"subjectDescription\": \"供应商到货及时率、订单执行情况\"\n      }\n    ],\n    \"clarificationMessage\": \"\"\n  }\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

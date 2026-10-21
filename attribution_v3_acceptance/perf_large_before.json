@@ -1,0 +1,705 @@
+{
+ "v3 4 维度 + 下钻": {
+  "median_ms": 15169.174909591675,
+  "payload": {
+   "status": true,
+   "errorCode": "0",
+   "result": {
+    "base": {
+     "metric_label": "dataset metric",
+     "metric_kind": "absolute",
+     "comparison_label": "签订年份: 2026 vs 2025",
+     "value_a": 172494234.73,
+     "value_b": 141101507.36,
+     "total_change": 31392727.37,
+     "change_rate": 0.2225,
+     "n_a": 14276.0,
+     "n_b": 13977.0
+    },
+    "dimension": {
+     "status": "found",
+     "significant": [
+      {
+       "dimension": "销售组织",
+       "explained_share": 0.9612,
+       "top_slices": [
+        {
+         "slice": "华东销售组织",
+         "n_a": 2542.0,
+         "n_b": 2070.0,
+         "value_a": 48211294.94,
+         "value_b": 22436925.5,
+         "change": 25774369.44,
+         "change_rate": 1.1487,
+         "contribution_share": 0.821
+        },
+        {
+         "slice": "华南销售组织",
+         "n_a": 2487.0,
+         "n_b": 2432.0,
+         "value_a": 28101848.27,
+         "value_b": 23700030.43,
+         "change": 4401817.84,
+         "change_rate": 0.1857,
+         "contribution_share": 0.1402
+        }
+       ],
+       "drill_down": {
+        "target_slice": "华东销售组织",
+        "status": "fallback_no_concentration",
+        "significant": [],
+        "fallback_info": {
+         "considered": [
+          "产品线",
+          "费用类型",
+          "客户名称"
+         ],
+         "change_rate_range": [
+          -0.4368,
+          22.6078
+         ],
+         "overall_change_rate": 1.1487,
+         "reason": "candidate dimensions did not pass concentration threshold"
+        }
+       }
+      }
+     ],
+     "auto_discovered": {
+      "candidates_used": [
+       "销售组织",
+       "产品线",
+       "费用类型",
+       "客户名称"
+      ]
+     }
+    },
+    "factor": {
+     "status": "skipped"
+    },
+    "warnings": []
+   }
+  }
+ },
+ "v3 4 维度，关闭下钻": {
+  "median_ms": 9950.448036193848,
+  "payload": {
+   "status": true,
+   "errorCode": "0",
+   "result": {
+    "base": {
+     "metric_label": "dataset metric",
+     "metric_kind": "absolute",
+     "comparison_label": "签订年份: 2026 vs 2025",
+     "value_a": 172494234.73,
+     "value_b": 141101507.36,
+     "total_change": 31392727.37,
+     "change_rate": 0.2225,
+     "n_a": 14276.0,
+     "n_b": 13977.0
+    },
+    "dimension": {
+     "status": "found",
+     "significant": [
+      {
+       "dimension": "销售组织",
+       "explained_share": 0.9612,
+       "top_slices": [
+        {
+         "slice": "华东销售组织",
+         "n_a": 2542.0,
+         "n_b": 2070.0,
+         "value_a": 48211294.94,
+         "value_b": 22436925.5,
+         "change": 25774369.44,
+         "change_rate": 1.1487,
+         "contribution_share": 0.821
+        },
+        {
+         "slice": "华南销售组织",
+         "n_a": 2487.0,
+         "n_b": 2432.0,
+         "value_a": 28101848.27,
+         "value_b": 23700030.43,
+         "change": 4401817.84,
+         "change_rate": 0.1857,
+         "contribution_share": 0.1402
+        }
+       ]
+      }
+     ],
+     "auto_discovered": {
+      "candidates_used": [
+       "销售组织",
+       "产品线",
+       "费用类型",
+       "客户名称"
+      ]
+     }
+    },
+    "factor": {
+     "status": "skipped"
+    },
+    "warnings": []
+   }
+  }
+ },
+ "v3 1 维度，关闭下钻": {
+  "median_ms": 6046.465158462524,
+  "payload": {
+   "status": true,
+   "errorCode": "0",
+   "result": {
+    "base": {
+     "metric_label": "dataset metric",
+     "metric_kind": "absolute",
+     "comparison_label": "签订年份: 2026 vs 2025",
+     "value_a": 172494234.73,
+     "value_b": 141101507.36,
+     "total_change": 31392727.37,
+     "change_rate": 0.2225,
+     "n_a": 14276.0,
+     "n_b": 13977.0
+    },
+    "dimension": {
+     "status": "found",
+     "significant": [
+      {
+       "dimension": "销售组织",
+       "explained_share": 0.9612,
+       "top_slices": [
+        {
+         "slice": "华东销售组织",
+         "n_a": 2542.0,
+         "n_b": 2070.0,
+         "value_a": 48211294.94,
+         "value_b": 22436925.5,
+         "change": 25774369.44,
+         "change_rate": 1.1487,
+         "contribution_share": 0.821
+        },
+        {
+         "slice": "华南销售组织",
+         "n_a": 2487.0,
+         "n_b": 2432.0,
+         "value_a": 28101848.27,
+         "value_b": 23700030.43,
+         "change": 4401817.84,
+         "change_rate": 0.1857,
+         "contribution_share": 0.1402
+        }
+       ]
+      }
+     ],
+     "auto_discovered": {
+      "candidates_used": [
+       "销售组织"
+      ]
+     }
+    },
+    "factor": {
+     "status": "skipped"
+    },
+    "warnings": []
+   }
+  }
+ },
+ "v3 4 维度 + 下钻 + 构成项": {
+  "median_ms": 17167.870044708252,
+  "payload": {
+   "status": true,
+   "errorCode": "0",
+   "result": {
+    "base": {
+     "metric_label": "dataset metric",
+     "metric_kind": "absolute",
+     "comparison_label": "签订年份: 2026 vs 2025",
+     "value_a": 172494234.73,
+     "value_b": 141101507.36,
+     "total_change": 31392727.37,
+     "change_rate": 0.2225,
+     "n_a": 14276.0,
+     "n_b": 13977.0
+    },
+    "dimension": {
+     "status": "found",
+     "significant": [
+      {
+       "dimension": "销售组织",
+       "explained_share": 0.9612,
+       "top_slices": [
+        {
+         "slice": "华东销售组织",
+         "n_a": 2542.0,
+         "n_b": 2070.0,
+         "value_a": 48211294.94,
+         "value_b": 22436925.5,
+         "change": 25774369.44,
+         "change_rate": 1.1487,
+         "contribution_share": 0.821
+        },
+        {
+         "slice": "华南销售组织",
+         "n_a": 2487.0,
+         "n_b": 2432.0,
+         "value_a": 28101848.27,
+         "value_b": 23700030.43,
+         "change": 4401817.84,
+         "change_rate": 0.1857,
+         "contribution_share": 0.1402
+        }
+       ],
+       "drill_down": {
+        "target_slice": "华东销售组织",
+        "status": "fallback_no_concentration",
+        "significant": [],
+        "fallback_info": {
+         "considered": [
+          "产品线",
+          "费用类型",
+          "客户名称"
+         ],
+         "change_rate_range": [
+          -0.4368,
+          22.6078
+         ],
+         "overall_change_rate": 1.1487,
+         "reason": "candidate dimensions did not pass concentration threshold"
+        }
+       }
+      }
+     ],
+     "auto_discovered": {
+      "candidates_used": [
+       "销售组织",
+       "产品线",
+       "费用类型",
+       "客户名称"
+      ]
+     }
+    },
+    "factor": {
+     "status": "fallback_projection",
+     "method": "additive",
+     "factors": [
+      {
+       "name": "货款",
+       "operator": "+",
+       "coefficient": 1.0,
+       "value_a": 153056421.03,
+       "value_b": 124891362.8,
+       "change": 28165058.23,
+       "signed_contribution": 28165058.23,
+       "change_rate": 0.2255,
+       "contribution_share": 0.8972,
+       "passed_threshold": false
+      },
+      {
+       "name": "运费",
+       "operator": "+",
+       "coefficient": 1.0,
+       "value_a": 6563381.59,
+       "value_b": 5348408.22,
+       "change": 1214973.37,
+       "signed_contribution": 1214973.37,
+       "change_rate": 0.2272,
+       "contribution_share": 0.0387,
+       "passed_threshold": false
+      },
+      {
+       "name": "服务费",
+       "operator": "+",
+       "coefficient": 1.0,
+       "value_a": 7664791.12,
+       "value_b": 6601389.48,
+       "change": 1063401.64,
+       "signed_contribution": 1063401.64,
+       "change_rate": 0.1611,
+       "contribution_share": 0.0339,
+       "passed_threshold": false
+      },
+      {
+       "name": "安装费",
+       "operator": "+",
+       "coefficient": 1.0,
+       "value_a": 5209640.99,
+       "value_b": 4260346.86,
+       "change": 949294.13,
+       "signed_contribution": 949294.13,
+       "change_rate": 0.2228,
+       "contribution_share": 0.0302,
+       "passed_threshold": false
+      }
+     ],
+     "chart_id": "<chart>",
+     "fallback_info": {
+      "formula_used": "+货款 +运费 +服务费 +安装费",
+      "change_rates": [
+       0.2255,
+       0.2272,
+       0.1611,
+       0.2228
+      ],
+      "overall_change_rate": 0.2225,
+      "reason": "factors changed proportionally and are reported as projection"
+     }
+    },
+    "warnings": []
+   }
+  }
+ },
+ "v3 ratio（金额/行数）4 维度": {
+  "median_ms": 9403.794050216675,
+  "payload": {
+   "status": true,
+   "errorCode": "0",
+   "result": {
+    "base": {
+     "metric_label": "dataset metric",
+     "metric_kind": "ratio",
+     "comparison_label": "签订年份: 2026 vs 2025",
+     "value_a": 12082.81,
+     "value_b": 10095.26,
+     "total_change": 1987.55,
+     "change_rate": 0.1969,
+     "n_a": 14276.0,
+     "n_b": 13977.0
+    },
+    "dimension": {
+     "status": "found",
+     "significant": [
+      {
+       "dimension": "销售组织",
+       "explained_share": 1.0287,
+       "top_slices": [
+        {
+         "slice": "华东销售组织",
+         "n_a": 2542.0,
+         "n_b": 2070.0,
+         "value_a": 18965.89,
+         "value_b": 10839.09,
+         "change": 8126.8,
+         "change_rate": 0.7498,
+         "contribution_share": 0.8915,
+         "structure_effect": 324.75,
+         "individual_effect": 1447.07,
+         "total_effect": 1771.81,
+         "weight_a": 0.1781,
+         "weight_b": 0.1481
+        },
+        {
+         "slice": "华南销售组织",
+         "n_a": 2487.0,
+         "n_b": 2432.0,
+         "value_a": 11299.5,
+         "value_b": 9745.08,
+         "change": 1554.42,
+         "change_rate": 0.1595,
+         "contribution_share": 0.1373,
+         "structure_effect": 2.03,
+         "individual_effect": 270.79,
+         "total_effect": 272.82,
+         "weight_a": 0.1742,
+         "weight_b": 0.174
+        }
+       ]
+      }
+     ],
+     "auto_discovered": {
+      "candidates_used": [
+       "销售组织",
+       "产品线",
+       "费用类型",
+       "客户名称"
+      ]
+     }
+    },
+    "factor": {
+     "status": "found",
+     "method": "ratio_decomposition",
+     "ratio_decomposition": {
+      "structure_effect": {
+       "value": -18.97,
+       "share": -0.0095
+      },
+      "individual_effect": {
+       "value": 5981.61,
+       "share": 3.0095
+      },
+      "by_dimension": [
+       {
+        "dimension": "客户名称",
+        "structure_effect": {
+         "value": -47.67,
+         "share": -0.024
+        },
+        "individual_effect": {
+         "value": 2035.21,
+         "share": 1.024
+        }
+       },
+       {
+        "dimension": "产品线",
+        "structure_effect": {
+         "value": -1.81,
+         "share": -0.0009
+        },
+        "individual_effect": {
+         "value": 1989.36,
+         "share": 1.0009
+        }
+       },
+       {
+        "dimension": "费用类型",
+        "structure_effect": {
+         "value": 30.51,
+         "share": 0.0153
+        },
+        "individual_effect": {
+         "value": 1957.04,
+         "share": 0.9847
+        }
+       }
+      ]
+     }
+    },
+    "warnings": []
+   }
+  }
+ },
+ "v3 DATE 列 time_range": {
+  "median_ms": 16380.880117416382,
+  "payload": {
+   "status": true,
+   "errorCode": "0",
+   "result": {
+    "base": {
+     "metric_label": "dataset metric",
+     "metric_kind": "absolute",
+     "comparison_label": "签订日期: 2026-01-01~2027-01-01 vs 2025-01-01~2026-01-01",
+     "value_a": 172494234.73,
+     "value_b": 141101507.36,
+     "total_change": 31392727.37,
+     "change_rate": 0.2225,
+     "n_a": 14276.0,
+     "n_b": 13977.0
+    },
+    "dimension": {
+     "status": "found",
+     "significant": [
+      {
+       "dimension": "销售组织",
+       "explained_share": 0.9612,
+       "top_slices": [
+        {
+         "slice": "华东销售组织",
+         "n_a": 2542.0,
+         "n_b": 2070.0,
+         "value_a": 48211294.94,
+         "value_b": 22436925.5,
+         "change": 25774369.44,
+         "change_rate": 1.1487,
+         "contribution_share": 0.821
+        },
+        {
+         "slice": "华南销售组织",
+         "n_a": 2487.0,
+         "n_b": 2432.0,
+         "value_a": 28101848.27,
+         "value_b": 23700030.43,
+         "change": 4401817.84,
+         "change_rate": 0.1857,
+         "contribution_share": 0.1402
+        }
+       ],
+       "drill_down": {
+        "target_slice": "华东销售组织",
+        "status": "fallback_no_concentration",
+        "significant": [],
+        "fallback_info": {
+         "considered": [
+          "产品线",
+          "费用类型",
+          "客户名称"
+         ],
+         "change_rate_range": [
+          -0.4368,
+          22.6078
+         ],
+         "overall_change_rate": 1.1487,
+         "reason": "candidate dimensions did not pass concentration threshold"
+        }
+       }
+      }
+     ],
+     "auto_discovered": {
+      "candidates_used": [
+       "销售组织",
+       "产品线",
+       "费用类型",
+       "客户名称"
+      ]
+     }
+    },
+    "factor": {
+     "status": "skipped"
+    },
+    "warnings": []
+   }
+  }
+ },
+ "v2 单表（表头）count 3 维度": {
+  "median_ms": 7145.241975784302,
+  "payload": {
+   "status": true,
+   "errorCode": "0",
+   "result": {
+    "base": {
+     "metric_label": "*(count)",
+     "metric_kind": "absolute",
+     "comparison_label": "签订年份: 2026 vs 2025",
+     "value_a": 1667.0,
+     "value_b": 1667.0,
+     "total_change": 0.0,
+     "change_rate": 0.0,
+     "n_a": 1667.0,
+     "n_b": 1667.0
+    },
+    "dimension": {
+     "status": "found",
+     "significant": [
+      {
+       "dimension": "产品线",
+       "explained_share": 38000000000000.0,
+       "top_slices": [
+        {
+         "slice": "软件许可",
+         "n_a": 220.0,
+         "n_b": 201.0,
+         "value_a": 220.0,
+         "value_b": 201.0,
+         "change": 19.0,
+         "change_rate": 0.0945,
+         "contribution_share": 19000000000000.0
+        },
+        {
+         "slice": "智能仓储",
+         "n_a": 222.0,
+         "n_b": 203.0,
+         "value_a": 222.0,
+         "value_b": 203.0,
+         "change": 19.0,
+         "change_rate": 0.0936,
+         "contribution_share": 19000000000000.0
+        }
+       ],
+       "other_aggregated": {
+        "slices_count": 6,
+        "contribution_share": -38000000000000.0
+       },
+       "drill_down": {
+        "target_slice": "软件许可",
+        "status": "found",
+        "significant": [
+         {
+          "dimension": "销售组织",
+          "explained_share": 0.8421,
+          "top_slices": [
+           {
+            "slice": "华中销售组织",
+            "n_a": 41.0,
+            "n_b": 30.0,
+            "value_a": 41.0,
+            "value_b": 30.0,
+            "change": 11.0,
+            "change_rate": 0.3667,
+            "contribution_share": 0.5789
+           },
+           {
+            "slice": "华北销售组织",
+            "n_a": 34.0,
+            "n_b": 29.0,
+            "value_a": 34.0,
+            "value_b": 29.0,
+            "change": 5.0,
+            "change_rate": 0.1724,
+            "contribution_share": 0.2632
+           }
+          ],
+          "other_aggregated": {
+           "slices_count": 4,
+           "contribution_share": 0.1579
+          }
+         }
+        ]
+       }
+      },
+      {
+       "dimension": "销售组织",
+       "explained_share": 16000000000000.0,
+       "top_slices": [
+        {
+         "slice": "华北销售组织",
+         "n_a": 248.0,
+         "n_b": 291.0,
+         "value_a": 248.0,
+         "value_b": 291.0,
+         "change": -43.0,
+         "change_rate": -0.1478,
+         "contribution_share": -43000000000000.0
+        },
+        {
+         "slice": "华东销售组织",
+         "n_a": 291.0,
+         "n_b": 264.0,
+         "value_a": 291.0,
+         "value_b": 264.0,
+         "change": 27.0,
+         "change_rate": 0.1023,
+         "contribution_share": 27000000000000.0
+        }
+       ],
+       "other_aggregated": {
+        "slices_count": 4,
+        "contribution_share": 16000000000000.0
+       }
+      },
+      {
+       "dimension": "客户名称",
+       "explained_share": 2000000000000.0,
+       "top_slices": [
+        {
+         "slice": "客户184",
+         "n_a": 18.0,
+         "n_b": 5.0,
+         "value_a": 18.0,
+         "value_b": 5.0,
+         "change": 13.0,
+         "change_rate": 2.6,
+         "contribution_share": 13000000000000.0
+        },
+        {
+         "slice": "客户017",
+         "n_a": 2.0,
+         "n_b": 13.0,
+         "value_a": 2.0,
+         "value_b": 13.0,
+         "change": -11.0,
+         "change_rate": -0.8462,
+         "contribution_share": -11000000000000.0
+        }
+       ],
+       "other_aggregated": {
+        "slices_count": 198,
+        "contribution_share": -2000000000000.0
+       }
+      }
+     ]
+    },
+    "factor": {
+     "status": "skipped"
+    },
+    "warnings": []
+   }
+  }
+ }
+}

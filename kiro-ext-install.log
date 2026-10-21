@@ -1,0 +1,24 @@
+== cweijan.vscode-office
+Installing extensions...
+Extension 'cweijan.vscode-office' v4.2.0 is already installed. Use '--force' option to update to latest version or provide '@<version>' to install a specific version, for example: 'cweijan.vscode-office@1.2.3'.
+== d8aware.vscode-mermaid-extension
+Installing extensions...
+(node:49906) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `Kiro --trace-deprecation ...` to show where the warning was created)
+Extension 'd8aware.vscode-mermaid-extension' not found.
+Make sure you use the full extension ID, including the publisher, e.g.: ms-dotnettools.csharp
+Failed Installing Extensions: d8aware.vscode-mermaid-extension
+== detachhead.basedpyright
+Installing extensions...
+Extension 'detachhead.basedpyright' v1.40.2 is already installed. Use '--force' option to update to latest version or provide '@<version>' to install a specific version, for example: 'detachhead.basedpyright@1.2.3'.
+== eamodio.gitlens
+Installing extensions...
+Extension 'eamodio.gitlens' v19.3.0 is already installed. Use '--force' option to update to latest version or provide '@<version>' to install a specific version, for example: 'eamodio.gitlens@1.2.3'.
+== ms-python.autopep8
+Installing extensions...
+Extension 'ms-python.autopep8' v2026.4.0 is already installed. Use '--force' option to update to latest version or provide '@<version>' to install a specific version, for example: 'ms-python.autopep8@1.2.3'.
+== ms-python.debugpy
+Installing extensions...
+(node:49935) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+(Use `Kiro --trace-deprecation ...` to show where the warning was created)
+Installing extension 'ms-python.debugpy'...

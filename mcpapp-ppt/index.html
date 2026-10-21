@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>灵基 MCP App 功能介绍</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F4F3EE; --card: #FFFFFF; --primary: #C15F3C; --accent: #D97757;
+  --text: #141413; --sub: #6B6A65; --border: #E8E6DC; --blue: #6A9BCC;
+  --green: #788C5D; --code-bg: #1C1A17; --code-text: #E8E6DC;
+  --shadow: 0 2px 16px rgba(193, 95, 60, 0.07);
+  --shadow-md: 0 4px 24px rgba(193, 95, 60, 0.10);
+  --r: 14px; --rs: 8px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Lora', Georgia, serif; background: var(--bg); color: var(--text); overflow: hidden; height: 100vh; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { font-family: 'Poppins', Arial, sans-serif; font-weight: 600; line-height: 1.3; }
+
+.progress-bar { position: fixed; top: 0; left: 240px; right: 0; height: 4px; background: var(--border); z-index: 100; transition: left 0.3s ease; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 0.4s ease; width: 0%; }
+
+.deck { position: relative; height: 100vh; width: calc(100vw - 240px); margin-left: 240px; transition: margin-left 0.3s ease, width 0.3s ease; }
+.slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 50px 70px; opacity: 0; transition: opacity 0.45s ease; }
+.slide.active { display: flex; opacity: 1; }
+.slide-content { max-width: 920px; width: 100%; max-height: calc(100vh - 100px); overflow-y: auto; padding-right: 8px; }
+.slide-content::-webkit-scrollbar { width: 6px; }
+.slide-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.part-badge { display: inline-block; background: var(--primary); color: #fff; padding: 5px 16px; border-radius: 20px; font-family: 'Poppins', sans-serif; font-size: 0.78rem; font-weight: 500; margin-bottom: 14px; letter-spacing: 0.5px; }
+.slide-title { font-size: 2rem; margin-bottom: 6px; color: var(--text); }
+.slide-subtitle { font-size: 1rem; color: var(--sub); margin-bottom: 28px; font-style: italic; }
+.section-divider { background: var(--primary); }
+.section-divider .slide-content { text-align: center; color: #fff; }
+.section-divider h1 { font-size: 2.8rem; color: #fff; margin-bottom: 12px; }
+.section-divider .part-badge { background: rgba(255,255,255,0.2); color: #fff; }
+.section-divider p { color: rgba(255,255,255,0.85); font-size: 1.15rem; }
+
+.title-slide { text-align: center; }
+.hero-title { font-size: 3rem; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+.subtitle { font-size: 1.2rem; color: var(--sub); font-style: italic; margin-bottom: 36px; }
+.app-list { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
+.app-card { background: var(--card); border-radius: var(--r); padding: 18px 22px; box-shadow: var(--shadow); text-align: left; min-width: 200px; border: 1px solid var(--border); }
+.app-card strong { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--primary); margin-bottom: 4px; }
+.app-card span { font-size: 0.85rem; color: var(--sub); }
+
+.q-cards { display: flex; gap: 20px; margin-bottom: 30px; }
+.q-card { flex: 1; background: var(--card); border-radius: var(--r); padding: 28px; box-shadow: var(--shadow); border: 1px solid var(--border); border-left: 4px solid var(--primary); }
+.q-card .q-num { font-family: 'Poppins', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+.q-card p { font-size: 1.02rem; line-height: 1.6; }
+.q-card p.q-sub { font-size: 0.85rem; color: var(--sub); margin-top: 8px; }
+
+.tbl { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.88rem; }
+.tbl th { background: var(--primary); color: #fff; padding: 10px 14px; text-align: left; font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 0.82rem; }
+.tbl td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.tbl tr:nth-child(even) td { background: rgba(244, 243, 238, 0.5); }
+.tbl tr:hover td { background: rgba(217, 119, 87, 0.04); }
+.tbl code { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; background: var(--bg); padding: 1px 6px; border-radius: 4px; color: var(--primary); }
+
+pre.code { background: var(--code-bg); color: var(--code-text); border-radius: var(--rs); padding: 18px 22px; overflow-x: auto; margin: 14px 0; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.65; border: 1px solid #2a2724; }
+pre.code .cm { color: #7a7568; }
+pre.code .kw { color: #D97757; }
+pre.code .st { color: #788C5D; }
+pre.code .fn { color: #6A9BCC; }
+pre.code .pn { color: #C15F3C; }
+.code-label { font-family: 'Poppins', sans-serif; font-size: 0.75rem; color: var(--sub); margin-bottom: -8px; margin-top: 12px; font-weight: 500; }
+
+.callout { background: rgba(217, 119, 87, 0.06); border-left: 3px solid var(--accent); border-radius: 0 var(--rs) var(--rs) 0; padding: 14px 20px; margin: 16px 0; font-size: 0.92rem; line-height: 1.6; color: var(--text); }
+.callout strong { color: var(--primary); }
+.callout-blue { background: rgba(106, 155, 204, 0.07); border-left-color: var(--blue); }
+.callout-blue strong { color: var(--blue); }
+.callout-green { background: rgba(120, 140, 93, 0.07); border-left-color: var(--green); }
+.callout-green strong { color: var(--green); }
+
+.cards { display: grid; gap: 16px; margin: 16px 0; }
+.cards-2 { grid-template-columns: 1fr 1fr; }
+.cards-3 { grid-template-columns: 1fr 1fr 1fr; }
+.cards-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.info-card { background: var(--card); border-radius: var(--r); padding: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.info-card h4 { font-size: 0.95rem; color: var(--primary); margin-bottom: 8px; }
+.info-card p { font-size: 0.85rem; color: var(--sub); line-height: 1.55; }
+.info-card .card-icon { font-size: 1.5rem; margin-bottom: 8px; display: block; }
+.info-card ul.clean li { font-size: 0.82rem; padding: 3px 0 3px 18px; color: var(--sub); }
+
+details.qa { background: var(--card); border-radius: var(--rs); margin: 12px 0; border: 1px solid var(--border); overflow: hidden; box-shadow: var(--shadow); }
+details.qa summary { padding: 16px 22px; cursor: pointer; font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 0.95rem; color: var(--text); list-style: none; display: flex; align-items: center; gap: 10px; transition: background 0.2s; }
+details.qa summary::-webkit-details-marker { display: none; }
+details.qa summary::before { content: '▶'; font-size: 0.7rem; color: var(--accent); transition: transform 0.25s ease; }
+details.qa[open] summary::before { transform: rotate(90deg); }
+details.qa summary:hover { background: rgba(217, 119, 87, 0.04); }
+details.qa .qa-body { padding: 0 22px 18px 22px; font-size: 0.88rem; line-height: 1.7; color: var(--sub); }
+details.qa .qa-body p { margin-bottom: 10px; }
+details.qa .qa-body strong { color: var(--primary); }
+
+.steps { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+.step-pill { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 8px 18px; font-size: 0.85rem; font-family: 'Poppins', sans-serif; color: var(--text); box-shadow: var(--shadow); }
+.step-arrow { color: var(--accent); font-size: 1.2rem; }
+
+.tag { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-family: 'Poppins', sans-serif; font-weight: 500; }
+.tag-primary { background: rgba(193, 95, 60, 0.1); color: var(--primary); }
+.tag-blue { background: rgba(106, 155, 204, 0.12); color: var(--blue); }
+.tag-green { background: rgba(120, 140, 93, 0.12); color: var(--green); }
+.tag-gray { background: var(--bg); color: var(--sub); border: 1px solid var(--border); }
+
+.nav { position: fixed; bottom: 24px; left: calc(50% + 120px); transform: translateX(-50%); transition: left 0.3s ease; display: flex; align-items: center; gap: 16px; z-index: 100; background: var(--card); padding: 8px 16px; border-radius: 30px; box-shadow: var(--shadow-md); border: 1px solid var(--border); }
+.nav button { border: none; background: var(--primary); color: #fff; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s, transform 0.15s; }
+.nav button:hover { background: var(--accent); transform: scale(1.08); }
+.nav button:disabled { background: var(--border); color: var(--sub); cursor: not-allowed; transform: none; }
+.nav .counter { font-family: 'Poppins', sans-serif; font-size: 0.85rem; color: var(--sub); min-width: 60px; text-align: center; }
+.slide-num { position: fixed; top: 16px; right: 24px; font-family: 'Poppins', sans-serif; font-size: 0.78rem; color: var(--sub); z-index: 100; }
+
+code.inline { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; background: var(--bg); padding: 2px 7px; border-radius: 4px; color: var(--primary); border: 1px solid var(--border); }
+ul.clean { list-style: none; padding: 0; }
+ul.clean li { padding: 6px 0 6px 22px; position: relative; font-size: 0.9rem; line-height: 1.6; }
+ul.clean li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); font-weight: bold; }
+.hl { color: var(--primary); font-weight: 600; }
+.hl-blue { color: var(--blue); font-weight: 600; }
+.hl-green { color: var(--green); font-weight: 600; }
+
+.phase-flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin: 18px 0; justify-content: center; }
+.phase-item { background: var(--card); border: 1px solid var(--border); border-radius: var(--rs); padding: 10px 16px; font-size: 0.82rem; font-family: 'Poppins', sans-serif; box-shadow: var(--shadow); }
+.phase-item.active-phase { border-color: var(--primary); color: var(--primary); font-weight: 600; }
+
+.sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: var(--card); border-right: 1px solid var(--border); overflow-y: auto; z-index: 200; box-shadow: 2px 0 16px rgba(0,0,0,0.04); transition: transform 0.3s ease; }
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.sidebar-header { padding: 18px 20px 14px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 0.92rem; color: var(--primary); border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--card); z-index: 1; }
+.sidebar-section { padding: 12px 20px 4px; font-family: 'Poppins', sans-serif; font-size: 0.66rem; font-weight: 600; color: var(--sub); text-transform: uppercase; letter-spacing: 0.6px; }
+.sidebar-item { padding: 7px 20px 7px 28px; font-size: 0.8rem; cursor: pointer; color: var(--sub); transition: all 0.15s; border-left: 3px solid transparent; font-family: 'Lora', serif; line-height: 1.4; }
+.sidebar-item:hover { background: rgba(217,119,87,0.04); color: var(--text); }
+.sidebar-item.active { background: rgba(217,119,87,0.08); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+.sidebar-toggle { position: fixed; left: 240px; top: 50%; transform: translateY(-50%); z-index: 201; width: 20px; height: 48px; background: var(--card); border: 1px solid var(--border); border-left: none; border-radius: 0 6px 6px 0; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: var(--primary); box-shadow: 2px 1px 8px rgba(0,0,0,0.06); transition: left 0.3s ease; }
+.sidebar-toggle:hover { background: var(--bg); color: var(--accent); }
+body.collapsed .sidebar { transform: translateX(-240px); }
+body.collapsed .sidebar-toggle { left: 0; }
+body.collapsed .deck { margin-left: 0; width: 100vw; }
+body.collapsed .progress-bar { left: 0; }
+body.collapsed .nav { left: 50%; }
+
+.diagram { margin: 16px 0; display: flex; justify-content: center; }
+.flow-v { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.flow-h { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.flow-v-sm { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.flow-h-sm { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; justify-content: center; }
+.flow-node { background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; padding: 10px 18px; font-family: 'Poppins', sans-serif; font-size: 0.82rem; box-shadow: 0 1px 6px rgba(193,95,60,0.05); text-align: center; color: var(--text); min-width: 80px; }
+.flow-node small { display: block; font-size: 0.7rem; color: var(--sub); font-weight: 400; margin-top: 2px; }
+.flow-node-sm { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 6px 12px; font-family: 'Poppins', sans-serif; font-size: 0.74rem; box-shadow: 0 1px 4px rgba(193,95,60,0.04); text-align: center; color: var(--text); }
+.flow-node-start { border-radius: 20px; background: rgba(120,140,93,0.1); border-color: var(--green); color: var(--green); }
+.flow-node-end { border-radius: 20px; background: rgba(193,95,60,0.08); border-color: var(--primary); color: var(--primary); }
+.flow-node-highlight { border-color: var(--accent); }
+.flow-node-decision { border-radius: 8px; background: rgba(106,155,204,0.08); border-color: var(--blue); color: var(--blue); font-weight: 500; min-width: 100px; }
+.flow-arrow { color: var(--accent); font-size: 1.1rem; font-weight: bold; padding: 0 2px; }
+.flow-arrow-d { color: var(--accent); font-size: 1rem; line-height: 1; }
+.flow-label { font-size: 0.7rem; color: var(--sub); font-family: 'Poppins', sans-serif; text-align: center; }
+.flow-connector { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0 4px; }
+.flow-branch { display: flex; gap: 40px; justify-content: center; margin: 4px 0; }
+.flow-branch-col { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.flow-pairs { display: flex; flex-direction: column; gap: 5px; width: 100%; max-width: 680px; }
+.flow-pair { display: grid; grid-template-columns: 1fr 30px 1fr; gap: 8px; align-items: center; }
+.flow-pair .flow-arrow { text-align: center; }
+
+/* 自定义：泳道时序图（8 列网格，第 i 条泳道中心落在第 2i 条网格线上） */
+.seq { position: relative; display: grid; grid-template-columns: repeat(8, 1fr); row-gap: 9px; width: 100%; margin-top: 4px; }
+.seq-lifeline { position: absolute; top: 52px; bottom: 0; border-left: 1.5px dashed var(--border); transform: translateX(-50%); }
+.seq-head { grid-row: 1; margin: 0 8px; padding: 9px 6px; text-align: center; background: var(--card); border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.84rem; font-weight: 600; box-shadow: var(--shadow); position: relative; z-index: 1; }
+.seq-head small { display: block; font-size: 0.68rem; font-weight: 400; color: var(--sub); margin-top: 2px; }
+.seq-head.host { border-color: var(--accent); }
+.seq-head.app { border-color: var(--green); background: rgba(120,140,93,0.08); }
+.seq-msg { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: flex-end; }
+.seq-msg .lbl { text-align: center; font-family: 'Poppins', sans-serif; font-size: 0.75rem; color: var(--text); margin-bottom: 4px; white-space: nowrap; }
+.seq-msg .lbl code { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--primary); }
+.seq-msg .sn { display: inline-flex; width: 17px; height: 17px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 0.66rem; align-items: center; justify-content: center; margin-right: 5px; vertical-align: 1px; }
+.seq-line { position: relative; height: 0; border-top: 2px solid var(--accent); }
+.seq-line::after { content: ''; position: absolute; top: -6px; right: -2px; border-left: 9px solid var(--accent); border-top: 5px solid transparent; border-bottom: 5px solid transparent; }
+.seq-msg.left .seq-line::after { right: auto; left: -2px; border-left: none; border-right: 9px solid var(--accent); }
+.seq-msg.ret .seq-line { border-top-style: dashed; border-top-color: var(--blue); }
+.seq-msg.ret .seq-line::after { border-left-color: var(--blue); border-right-color: var(--blue); }
+.seq-msg.ret.left .seq-line::after { border-left-color: transparent; }
+.seq-self { position: relative; z-index: 1; margin: 0 4px; padding: 7px 8px; text-align: center; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 0.75rem; background: var(--card); border: 1.5px solid var(--green); color: var(--green); }
+.seq-self .sn { display: inline-flex; width: 17px; height: 17px; border-radius: 50%; background: var(--green); color: #fff; font-size: 0.66rem; align-items: center; justify-content: center; margin-right: 5px; }
+.seq-self.model { border-color: var(--primary); color: var(--primary); }
+.seq-self.model .sn { background: var(--primary); }
+.seq-band { grid-column: 1 / 9; position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; }
+.seq-band::before, .seq-band::after { content: ''; flex: 1; border-top: 1.5px solid rgba(193,95,60,0.35); }
+.seq-band span { font-family: 'Poppins', sans-serif; font-size: 0.72rem; font-weight: 500; color: var(--primary); background: rgba(193,95,60,0.08); border-radius: 12px; padding: 3px 12px; white-space: nowrap; }
+.seq-band.idle::before, .seq-band.idle::after { border-top-style: dashed; border-top-color: rgba(120,140,93,0.5); }
+.seq-band.idle span { color: var(--green); background: rgba(120,140,93,0.1); }
+.rel-chain { display: grid; grid-template-columns: minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr); align-items: stretch; margin-top: 6px; }
+.rel-card { background: var(--card); border: 1.5px solid var(--border); border-radius: var(--r); padding: 16px 14px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 8px; }
+.rel-card h4 { font-size: 0.98rem; color: var(--text); }
+.rel-card .rel-where { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--sub); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; width: fit-content; }
+.rel-card p { font-size: 0.8rem; color: var(--sub); line-height: 1.55; }
+.rel-card .rel-eg { margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 0.7rem; color: var(--primary); font-family: 'JetBrains Mono', monospace; overflow-wrap: anywhere; }
+.rel-card.app { border-color: var(--green); background: rgba(120,140,93,0.05); }
+.rel-arrow { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+.rel-arrow span { color: var(--accent); font-size: 1.3rem; font-weight: bold; line-height: 1; }
+.rel-arrow small { font-family: 'Poppins', sans-serif; font-size: 0.66rem; color: var(--sub); text-align: center; line-height: 1.3; }
+.rel-bus { margin-top: 14px; border: 1.5px dashed var(--primary); border-radius: 10px; padding: 10px 16px; text-align: center; font-family: 'Poppins', sans-serif; font-size: 0.8rem; color: var(--primary); background: rgba(193,95,60,0.05); }
+.rel-bus b { font-weight: 600; }
+.seq-legend { display: flex; gap: 22px; justify-content: center; margin-top: 14px; font-family: 'Poppins', sans-serif; font-size: 0.74rem; color: var(--sub); }
+.seq-legend i { display: inline-block; width: 28px; vertical-align: middle; margin-right: 6px; border-top: 2px solid var(--accent); }
+.seq-legend i.ret { border-top: 2px dashed var(--blue); }
+
+/* 自定义：主题卡片示意 */
+.mock { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 18px 20px; box-shadow: var(--shadow); margin: 12px 0; }
+.mock-user { margin-left: auto; width: fit-content; max-width: 70%; background: var(--bg); border-radius: 12px; padding: 8px 14px; font-size: 0.85rem; margin-bottom: 12px; }
+.sc-list { display: flex; gap: 10px; flex-wrap: wrap; font-family: -apple-system, 'PingFang SC', sans-serif; }
+.sc-card { flex: 1 1 170px; max-width: 220px; min-width: 140px; height: 150px; border-radius: 10px; padding: 12px; background: #fff; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08); display: flex; flex-direction: column; justify-content: space-between; font-size: 0.75rem; color: rgba(0,0,0,0.64); }
+.sc-card b { color: rgba(0,0,0,0.82); font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+.sc-rec { font-size: 0.66rem; color: #FF7700; background: rgba(255,119,0,0.08); padding: 1px 6px; border-radius: 4px; font-weight: 500; }
+.sc-desc { margin-top: 6px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.sc-meta { color: rgba(0,0,0,0.46); line-height: 1.6; }
+.sc-card.sel { box-shadow: inset 0 0 0 1.5px #495DFF; }
+.sc-card.dim { opacity: 0.46; }
+.sc-card.none { flex: 0 0 120px; align-items: center; justify-content: center; color: rgba(0,0,0,0.46); }
+.mock-reply { margin-top: 12px; font-size: 0.82rem; color: var(--sub); }
+
+/* 自定义：柱状图示意 */
+.bars { display: flex; align-items: flex-end; gap: 18px; height: 130px; padding: 8px 12px 0; border-bottom: 1px solid var(--border); }
+.bar { flex: 1; background: linear-gradient(180deg, var(--blue), rgba(106,155,204,0.55)); border-radius: 4px 4px 0 0; position: relative; }
+.bar.neg { background: linear-gradient(180deg, var(--accent), rgba(217,119,87,0.55)); }
+.bar span { position: absolute; top: -18px; left: 0; right: 0; text-align: center; font-size: 0.7rem; font-family: 'Poppins', sans-serif; color: var(--sub); }
+.bar-x { display: flex; gap: 18px; padding: 4px 12px 0; }
+.bar-x span { flex: 1; text-align: center; font-size: 0.72rem; color: var(--sub); font-family: 'Poppins', sans-serif; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.mini-h { font-family: 'Poppins', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--text); margin: 8px 0 4px; }
+</style>
+</head>
+<body class="collapsed">
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">📋 灵基 MCP App</div>
+  <div class="sidebar-section">Part 0 · 开篇</div>
+  <div class="sidebar-item" data-slide="0" onclick="showSlide(0)">封面</div>
+  <div class="sidebar-item" data-slide="1" onclick="showSlide(1)">纯文本对话的三个局限</div>
+  <div class="sidebar-section">Part 1 · 概念与架构</div>
+  <div class="sidebar-item" data-slide="2" onclick="showSlide(2)">分隔页</div>
+  <div class="sidebar-item" data-slide="3" onclick="showSlide(3)">MCP App 是什么</div>
+  <div class="sidebar-item" data-slide="4" onclick="showSlide(4)">运行架构</div>
+  <div class="sidebar-item" data-slide="5" onclick="showSlide(5)">一次调用的生命周期</div>
+  <div class="sidebar-item" data-slide="6" onclick="showSlide(6)">三件交付物，一个 appCode</div>
+  <div class="sidebar-item" data-slide="7" onclick="showSlide(7)">智能体 / Skill / App / 连接器</div>
+  <div class="sidebar-section">Part 2 · 能力全景</div>
+  <div class="sidebar-item" data-slide="8" onclick="showSlide(8)">分隔页</div>
+  <div class="sidebar-item" data-slide="9" onclick="showSlide(9)">宿主 → App 回调</div>
+  <div class="sidebar-item" data-slide="10" onclick="showSlide(10)">hostContext</div>
+  <div class="sidebar-item" data-slide="11" onclick="showSlide(11)">App → 宿主出站能力</div>
+  <div class="sidebar-item" data-slide="12" onclick="showSlide(12)">平台工具集 platform_*</div>
+  <div class="sidebar-item" data-slide="13" onclick="showSlide(13)">两种 runMode</div>
+  <div class="sidebar-item" data-slide="14" onclick="showSlide(14)">安全与边界</div>
+  <div class="sidebar-section">Part 3 · 案例：主题澄清</div>
+  <div class="sidebar-item" data-slide="15" onclick="showSlide(15)">分隔页</div>
+  <div class="sidebar-item" data-slide="16" onclick="showSlide(16)">业务场景与触发决策</div>
+  <div class="sidebar-item" data-slide="17" onclick="showSlide(17)">界面与交互</div>
+  <div class="sidebar-item" data-slide="18" onclick="showSlide(18)">数据流</div>
+  <div class="sidebar-item" data-slide="19" onclick="showSlide(19)">info.json 与入参契约</div>
+  <div class="sidebar-section">Part 4 · 落地</div>
+  <div class="sidebar-item" data-slide="20" onclick="showSlide(20)">分隔页</div>
+  <div class="sidebar-item" data-slide="21" onclick="showSlide(21)">开发流程</div>
+  <div class="sidebar-item" data-slide="22" onclick="showSlide(22)">我们的交付流水线</div>
+  <div class="sidebar-item" data-slide="23" onclick="showSlide(23)">踩坑清单 Top 10</div>
+  <div class="sidebar-item" data-slide="24" onclick="showSlide(24)">Q&amp;A</div>
+  <div class="sidebar-item" data-slide="25" onclick="showSlide(25)">目前上线前的问题</div>
+</div>
+<div class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()">▶</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="slide-num" id="slideNum"></div>
+
+<div class="deck">
+
+<!-- 0 封面 -->
+<div class="slide active">
+  <div class="slide-content title-slide">
+    <div class="part-badge">技术分享 · 灵基 MCP App</div>
+    <h1 class="hero-title">让对话里长出可交互的界面</h1>
+    <p class="subtitle">灵基 MCP App 能力介绍与落地实践</p>
+    <div class="app-list">
+      <div class="app-card"><strong>subject_clarify_mcpapp</strong><span>主题澄清组件 · 点选后回传模型</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 1 三个局限 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 0 · 开篇 · 为什么需要</div>
+    <h2 class="slide-title">纯文本对话的三个局限</h2>
+    <p class="slide-subtitle">模型能想清楚，但界面只有一个输入框</p>
+    <div class="q-cards">
+      <div class="q-card">
+        <div class="q-num">01</div>
+        <p>选项只能靠<span class="hl">打字回复</span></p>
+        <p class="q-sub">模型列出 1/2/3 个候选主题，用户还得手打编号或名称，容易打错，模型也要再解析一轮。</p>
+      </div>
+      <div class="q-card">
+        <div class="q-num">02</div>
+        <p>图表数据<span class="hl">挤占上下文</span></p>
+        <p class="q-sub">让模型输出 ECharts option，大段 JSON 进上下文，浪费 token，还可能被模型改错数字。</p>
+      </div>
+      <div class="q-card">
+        <div class="q-num">03</div>
+        <p>复杂交互<span class="hl">无从表达</span></p>
+        <p class="q-sub">表单填写、确认、预览、跳转 ERP 这类操作，文字描述再多也替代不了一个按钮。</p>
+      </div>
+    </div>
+    <div class="callout"><strong>MCP App 的答案：</strong>模型负责判断“什么时候需要界面、传什么参数”，界面由前端组件自己渲染、自己取数、自己把结果交回模型。</div>
+  </div>
+</div>
+
+<!-- 2 分隔 -->
+<div class="slide section-divider">
+  <div class="slide-content">
+    <div class="part-badge">PART 1 · 概念与架构</div>
+    <h1>MCP App 是什么</h1>
+    <p>一个被模型“调用”的前端页面</p>
+  </div>
+</div>
+
+<!-- 3 是什么 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 1 · 概念与架构 · 定义</div>
+    <h2 class="slide-title">MCP App 是什么</h2>
+    <p class="slide-subtitle">运行在灵基 WebUI 沙箱 iframe 中的静态前端应用</p>
+    <div class="cards cards-3">
+      <div class="info-card">
+        <span class="card-icon">🧩</span>
+        <h4>静态前端</h4>
+        <p>React + Vite 构建出的 <code class="inline">dist/</code>，上架后由宿主从 CDN 加载进沙箱 iframe。UI 统一用 lingee-ui / lingee-icon。</p>
+      </div>
+      <div class="info-card">
+        <span class="card-icon">🔌</span>
+        <h4>AppBridge 双向通信</h4>
+        <p>宿主与 App 之间走 PostMessage。App 用官方 SDK <code class="inline">@modelcontextprotocol/ext-apps</code> 的 <code class="inline">useApp</code> 接线，不手写协议。</p>
+      </div>
+      <div class="info-card">
+        <span class="card-icon">🎯</span>
+        <h4>虚拟入口工具</h4>
+        <p>每个 App 以 <code class="inline">appCode</code> 为名注册一个“虚拟工具”。模型调用它，宿主就把 App 拉起，并把入参注入进去。</p>
+      </div>
+    </div>
+    <div class="callout callout-blue"><strong>一句话：</strong>对模型来说它是一个工具，对用户来说它是一块界面，对开发者来说它是一个普通的前端项目。</div>
+  </div>
+</div>
+
+<!-- 4 架构 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 1 · 概念与架构 · 运行架构</div>
+    <h2 class="slide-title">运行架构</h2>
+    <p class="slide-subtitle">调用即返回，App 独立运行，用户操作作为新一轮输入回到 harness</p>
+    <div class="seq">
+      <div class="seq-lifeline" style="left:12.5%"></div>
+      <div class="seq-lifeline" style="left:37.5%"></div>
+      <div class="seq-lifeline" style="left:62.5%"></div>
+      <div class="seq-lifeline" style="left:87.5%"></div>
+
+      <div class="seq-head" style="grid-column:1/3">Harness<small>按 SKILL.md 决定何时调</small></div>
+      <div class="seq-head host" style="grid-column:3/5">宿主 WebUI<small>拉起 · 代理 · 浮层</small></div>
+      <div class="seq-head app" style="grid-column:5/7">MCP App<small>沙箱 iframe</small></div>
+      <div class="seq-head" style="grid-column:7/9">工具层<small>业务工具 / platform_*</small></div>
+
+      <div class="seq-band" style="grid-row:2"><span>第 N 轮 loop</span></div>
+      <div class="seq-msg" style="grid-row:3; grid-column:2/4"><div class="lbl"><span class="sn">1</span>调用虚拟入口工具 <code>appCode</code></div><div class="seq-line"></div></div>
+      <div class="seq-msg ret left" style="grid-row:4; grid-column:2/4"><div class="lbl"><span class="sn">2</span>立即返回，不等 App</div><div class="seq-line"></div></div>
+      <div class="seq-msg" style="grid-row:4; grid-column:4/6"><div class="lbl"><span class="sn">3</span>拉起 iframe，<code>ontoolinput</code></div><div class="seq-line"></div></div>
+      <div class="seq-self model" style="grid-row:5; grid-column:1/3"><span class="sn">4</span>结束本轮输出（由 prompt 控制）</div>
+
+      <div class="seq-band idle" style="grid-row:6"><span>loop 已释放 · App 在 iframe 里独立运行，等用户操作多久都不占用 loop</span></div>
+      <div class="seq-self" style="grid-row:7; grid-column:5/7"><span class="sn">5</span>渲染界面，用户交互</div>
+      <div class="seq-msg" style="grid-row:8; grid-column:6/8"><div class="lbl"><span class="sn">6</span><code>callServerTool</code>（经宿主代理）</div><div class="seq-line"></div></div>
+      <div class="seq-msg ret left" style="grid-row:9; grid-column:6/8"><div class="lbl"><span class="sn">7</span>返回结果</div><div class="seq-line"></div></div>
+
+      <div class="seq-band" style="grid-row:10"><span>第 N+1 轮 loop · 由用户操作触发</span></div>
+      <div class="seq-msg left" style="grid-row:11; grid-column:2/6"><div class="lbl"><span class="sn">8</span><code>updateModelContext</code> 等同用户发起一次新提问</div><div class="seq-line"></div></div>
+      <div class="seq-self model" style="grid-row:12; grid-column:1/3"><span class="sn">9</span>继续推理、回复用户</div>
+    </div>
+    <div class="seq-legend"><span><i></i>调用</span><span><i class="ret"></i>返回</span></div>
+    <div class="callout" style="margin-top:12px"><strong>不阻塞 loop：</strong>入口是虚拟工具，调用即返回；本轮是否收尾由 prompt 控制（如 nl2sql 规定“调用后停止本轮输出”），而不是 harness 在等 App；用户的操作结果经 <code class="inline">updateModelContext</code> 作为新一轮输入回到 harness。</div>
+  </div>
+</div>
+
+<!-- 5 生命周期 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 1 · 概念与架构 · 生命周期</div>
+    <h2 class="slide-title">一次调用的生命周期</h2>
+    <p class="slide-subtitle">从模型发起调用，到 App 被销毁</p>
+    <div class="diagram">
+      <div class="flow-v">
+        <div class="flow-node flow-node-start">模型调用虚拟入口工具</div>
+        <div class="flow-arrow-d">↓</div>
+        <div class="flow-node">宿主拉起 iframe，与 App 握手<small>下发 hostContext → onhostcontextchanged</small></div>
+        <div class="flow-arrow-d">↓</div>
+        <div class="flow-node">入参流式到达 <code class="inline">ontoolinputpartial</code>（可多次）<small>JSON 可能不完整，保留上一帧，不清空</small></div>
+        <div class="flow-arrow-d">↓</div>
+        <div class="flow-node flow-node-highlight">完整入参到达 <code class="inline">ontoolinput</code><small>首屏只认它；副作用只在这里做一次</small></div>
+        <div class="flow-arrow-d">↓</div>
+        <div class="flow-node">渲染 → 用户交互 → callServerTool 取数 / 落库</div>
+        <div class="flow-arrow-d">↓</div>
+        <div class="flow-node">把结果交回模型 <code class="inline">updateModelContext</code></div>
+        <div class="flow-arrow-d">↓</div>
+        <div class="flow-node flow-node-end">onteardown 清理</div>
+      </div>
+    </div>
+    <div class="callout"><strong>注意：</strong>入口是虚拟工具，很多场景没有输出，<code class="inline">ontoolresult</code> 可能永远不来，首屏不能挂在它上面等。</div>
+  </div>
+</div>
+
+<!-- 6 交付物 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 1 · 概念与架构 · 交付物</div>
+    <h2 class="slide-title">三件交付物，一个 appCode</h2>
+    <p class="slide-subtitle">三处 appCode 任一错开，组件都调不起来</p>
+    <div class="cards cards-3">
+      <div class="info-card">
+        <span class="card-icon">📄</span>
+        <h4>info.json · 给平台</h4>
+        <p>组件身份、展示名（中英）、<code class="inline">runMode</code>、入口工具 <code class="inline">inputSchema</code>、可调用的业务工具白名单 <code class="inline">relateTools</code>。</p>
+      </div>
+      <div class="info-card">
+        <span class="card-icon">📦</span>
+        <h4>dist/ · 给宿主</h4>
+        <p>前端构建产物，必须有 <code class="inline">dist/index.html</code>。zip 一级目录正好是 <code class="inline">dist/</code> + <code class="inline">info.json</code>。</p>
+      </div>
+      <div class="info-card">
+        <span class="card-icon">🧠</span>
+        <h4>SKILL.md · 给模型</h4>
+        <p>告诉模型什么时候调、怎么传参。<code class="inline">allowed-tools</code> 填 appCode，入参表与 <code class="inline">inputSchema</code> 保持一致。</p>
+      </div>
+    </div>
+    <div class="diagram">
+      <div class="flow-h">
+        <div class="flow-node">info.json<small>appCode</small></div>
+        <span class="flow-arrow">=</span>
+        <div class="flow-node">目录名 / 联调路由<small>/{env}/{appCode}/</small></div>
+        <span class="flow-arrow">=</span>
+        <div class="flow-node flow-node-highlight">SKILL.md<small>allowed-tools</small></div>
+      </div>
+    </div>
+    <div class="callout callout-green"><strong>我们的实践：</strong>主题澄清组件由 <code class="inline">nl2sql</code> skill 调用，它的 appCode 就写在 nl2sql 的 <code class="inline">allowed-tools</code> 里。</div>
+  </div>
+</div>
+
+<!-- 7 关系 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 1 · 概念与架构 · 配置关系</div>
+    <h2 class="slide-title">智能体、Skill、MCP App、连接器的关系</h2>
+    <p class="slide-subtitle">一层关联一层，最后落到连接器下的工具</p>
+    <div class="rel-chain">
+      <div class="rel-card">
+        <h4>🤖 智能体</h4>
+        <span class="rel-where">agent.yaml</span>
+        <p>绑定一个连接器<br><code class="inline">connector_types</code><br>关联若干 skill<br><code class="inline">skills.associated</code></p>
+        <div class="rel-eg">abi-analysis<br>企业数据分析</div>
+      </div>
+      <div class="rel-arrow"><span>→</span><small>关联<br>skill</small></div>
+      <div class="rel-card">
+        <h4>🧠 Skill</h4>
+        <span class="rel-where">SKILL.md</span>
+        <p>在 <code class="inline">allowed-tools</code> 里列出 MCP App 的 appCode，并写清何时调、怎么传参</p>
+        <div class="rel-eg">nl2sql</div>
+      </div>
+      <div class="rel-arrow"><span>→</span><small>关联<br>MCP App</small></div>
+      <div class="rel-card app">
+        <h4>🧩 MCP App</h4>
+        <span class="rel-where">info.json</span>
+        <p>按连接器类型登记要调用的工具<br><code class="inline">mcpConnector[]</code><br><code class="inline">relateTools</code></p>
+        <div class="rel-eg">subject_clarify_mcpapp</div>
+      </div>
+      <div class="rel-arrow"><span>→</span><small>关联<br>连接器工具</small></div>
+      <div class="rel-card">
+        <h4>🔧 连接器工具</h4>
+        <span class="rel-where">连接器下的 MCP 工具</span>
+        <p>App 经宿主代理调用的真实业务工具</p>
+        <div class="rel-eg">selectsubjects<br>recordsubjectselection</div>
+      </div>
+    </div>
+    <div class="rel-bus"><b>连接器（XH / XK）</b>是串起四者的那根线：智能体绑定的是哪个连接器，MCP App 的 <code class="inline">mcpConnector</code> 里就要有这个类型，并且对应的工具都要存在</div>
+    <div class="callout callout-blue"><strong>以主题澄清为例：</strong>企业数据分析智能体关联 nl2sql；nl2sql 的 <code class="inline">allowed-tools</code> 列出了主题澄清组件；组件的 info.json 在 XK、XH 两个连接器下都登记了 selectsubjects 和 recordsubjectselection。</div>
+  </div>
+</div>
+
+<!-- 8 分隔 -->
+<div class="slide section-divider">
+  <div class="slide-content">
+    <div class="part-badge">PART 2 · 能力全景</div>
+    <h1>App 能做什么</h1>
+    <p>宿主回调 · hostContext · 出站能力 · 平台工具 · 运行模式</p>
+  </div>
+</div>
+
+<!-- 9 回调 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 2 · 能力全景 · 宿主 → App</div>
+    <h2 class="slide-title">宿主 → App：六个回调</h2>
+    <p class="slide-subtitle">全部注册在 useApp 的 onAppCreated 里，写在 useEffect 会漏掉首发通知</p>
+    <table class="tbl">
+      <thead><tr><th>回调</th><th>触发时机</th><th>该怎么用</th></tr></thead>
+      <tbody>
+        <tr><td><code>ontoolinputpartial</code></td><td>模型流式生成入参期间，可能多次</td><td>解析不出来就保留上一帧；不做任何副作用</td></tr>
+        <tr><td><code>ontoolinput</code></td><td>入参生成完毕</td><td><span class="hl">首屏渲染入口</span>；发授权、取数等副作用只在这里做一次</td></tr>
+        <tr><td><code>ontoolresult</code></td><td>入口工具有输出时</td><td>可能永远不来，只作兜底</td></tr>
+        <tr><td><code>ontoolcancelled</code></td><td>调用被取消</td><td>展示取消态</td></tr>
+        <tr><td><code>onhostcontextchanged</code></td><td>握手后、容器尺寸 / 显示模式变化</td><td>参数是增量，现场 <code>getHostContext()</code> 读全量，比对后再 setState</td></tr>
+        <tr><td><code>onteardown</code></td><td>App 被销毁前</td><td>清理定时器、订阅</td></tr>
+      </tbody>
+    </table>
+    <div class="code-label">接线骨架</div>
+<pre class="code"><span class="kw">const</span> { app, isConnected } = <span class="fn">useApp</span>({
+  appInfo: { name: <span class="st">"my-app"</span>, version: <span class="st">"1.0.0"</span> },
+  capabilities: {},
+  <span class="fn">onAppCreated</span>: (instance) => {
+    instance.<span class="pn">ontoolinputpartial</span> = (p) => <span class="fn">applyPayload</span>(p.arguments, <span class="kw">true</span>);
+    instance.<span class="pn">ontoolinput</span> = (p) => <span class="fn">applyPayload</span>(p.arguments, <span class="kw">false</span>);
+    instance.<span class="pn">onhostcontextchanged</span> = () => <span class="fn">setHostCtx</span>(instance.<span class="fn">getHostContext</span>());
+  },
+});</pre>
+  </div>
+</div>
+
+<!-- 10 hostContext -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 2 · 能力全景 · hostContext</div>
+    <h2 class="slide-title">hostContext：宿主给的环境快照</h2>
+    <p class="slide-subtitle">握手时下发；运行期只有 displayMode 与 containerDimensions 会变</p>
+    <div class="cards cards-3">
+      <div class="info-card"><h4>🎨 theme / styles</h4><p><code class="inline">styles.variables</code> 是 76 个已解析的 Design Token 字面量，需调 <code class="inline">applyHostStyleVariables</code> 写到根节点才生效。</p></div>
+      <div class="info-card"><h4>📐 containerDimensions</h4><p>容器尺寸。JS 里要按宽度分支时读它，不要去摸宿主页面；sidebar 模式才下发可用高度。</p></div>
+      <div class="info-card"><h4>🖥 displayMode / runMode</h4><p>inline ↔ fullscreen 的当前状态，以及 info.json 声明的运行模式。</p></div>
+      <div class="info-card"><h4>🛡 tools</h4><p>当前 App 被放行的工具白名单。可据此判断某个业务工具是否已上线，避免必然失败的调用。</p></div>
+      <div class="info-card"><h4>👤 bootstrap</h4><p>用户、租户、会话 ID、界面语言。除 <code class="inline">authRoles</code> 外都可能是 null，且切语言后不会更新。</p></div>
+      <div class="info-card"><h4>💡 写样式的姿势</h4><p>自有样式统一写 <code class="inline">var(--token, 兜底值)</code>，没注入时也能看。</p></div>
+    </div>
+    <div class="callout callout-blue"><strong>案例对照：</strong>主题澄清组件用了 Token 注入、<code class="inline">tools</code> 白名单探测和 <code class="inline">bootstrap.bootstrapLanguage</code>。</div>
+  </div>
+</div>
+
+<!-- 11 出站 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 2 · 能力全景 · App → 宿主</div>
+    <h2 class="slide-title">App → 宿主：出站能力</h2>
+    <p class="slide-subtitle">都要等 isConnected 为 true 再调，早调可能丢请求</p>
+    <table class="tbl">
+      <thead><tr><th>方法</th><th>作用</th><th>失败形态</th></tr></thead>
+      <tbody>
+        <tr><td><code>callServerTool</code></td><td>调业务工具或平台工具</td><td>不在白名单 → <code>isError</code>；后端代理失败 → <span class="hl">reject</span></td></tr>
+        <tr><td><code>updateModelContext</code></td><td>把交互结果交给模型继续处理</td><td>返回 <code>{ isError }</code>；文本或 additional 为空时<span class="hl">静默丢弃</span></td></tr>
+        <tr><td><code>sendMessage</code></td><td>以用户消息发进对话，触发模型回复</td><td>返回 <code>{ isError }</code></td></tr>
+        <tr><td><code>openLink</code></td><td>在宿主里打开外部链接</td><td>返回 <code>{ isError }</code></td></tr>
+        <tr><td><code>downloadFile</code></td><td>经宿主下载（沙箱拦截直接下载）</td><td>返回 <code>{ isError }</code></td></tr>
+        <tr><td><code>requestDisplayMode</code></td><td>请求 inline / fullscreen</td><td>返回宿主实际设置的模式</td></tr>
+        <tr><td><code>sendSizeChanged</code></td><td>上报内容尺寸</td><td>SDK autoResize 默认已做，通常不用手动调</td></tr>
+        <tr><td><code>sendLog</code> / <code>requestTeardown</code></td><td>打日志 / 主动关闭自己</td><td>notification，无返回</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><strong>实践建议：</strong>把 <code class="inline">callServerTool</code> 包一层，<code class="inline">isError</code> 转成异常，外层统一 <code class="inline">try / catch</code>，两种失败形态一起兜住。</div>
+  </div>
+</div>
+
+<!-- 12 平台工具 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 2 · 能力全景 · 平台工具</div>
+    <h2 class="slide-title">平台工具集 platform_*</h2>
+    <p class="slide-subtitle">宿主统一提供、所有 App 共享，不用在 info.json 里登记</p>
+    <div class="cards cards-2">
+      <div class="info-card">
+        <h4>💾 App 状态</h4>
+        <ul class="clean">
+          <li><code class="inline">platform_save_app_state</code> 按（会话, 消息）落库，覆盖写</li>
+          <li><code class="inline">platform_get_app_state</code> 启动时恢复</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>📎 会话文件</h4>
+        <ul class="clean">
+          <li><code class="inline">platform_list_session_attachments</code> 用户上传的附件</li>
+          <li><code class="inline">platform_list_session_artifacts</code> 对话产出的文件</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>🏢 环境与授权</h4>
+        <ul class="clean">
+          <li><code class="inline">platform_get_erp_environment</code> 当前绑定的 ERP</li>
+          <li><code class="inline">platform_get_authorization_code</code> 免登授权码（60 秒一次性）</li>
+          <li><code class="inline">platform_is_mobile</code> 宿主是否移动端布局</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>🪟 宿主浮层</h4>
+        <ul class="clean">
+          <li><code class="inline">platform_show_confirm</code> / <code class="inline">platform_show_toast</code></li>
+          <li><code class="inline">platform_open_modal</code> / <code class="inline">platform_open_sidebar</code> 把 App 自己的页面开成弹窗或侧栏</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout"><strong>为什么状态必须落库：</strong>宿主同时存活的 App iframe 有上限（当前 5 个），超出会淘汰最久未活跃的那个，重新进入视口时从头初始化，内存状态全丢。</div>
+  </div>
+</div>
+
+<!-- 13 runMode -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 2 · 能力全景 · 运行模式</div>
+    <h2 class="slide-title">两种 runMode</h2>
+    <p class="slide-subtitle">决定展示位置，也决定谁控制高度</p>
+    <table class="tbl">
+      <thead><tr><th></th><th>message</th><th>sidebar</th></tr></thead>
+      <tbody>
+        <tr><td><strong>展示位置</strong></td><td>内联在消息流里</td><td>消息流里是卡片，点开在侧边栏面板</td></tr>
+        <tr><td><strong>iframe 高度</strong></td><td>初始 400px，跟随 App 上报，上限 6000px</td><td>恒为面板容器的 100%，<span class="hl">忽略上报</span></td></tr>
+        <tr><td><strong>App 该怎么做</strong></td><td>内容自然撑开，交给 SDK 自动上报</td><td>根元素撑满 100%，超出在内部滚动</td></tr>
+        <tr><td><strong>适合</strong></td><td>卡片、图表、轻量确认</td><td>单据、长表单、复杂工作台</td></tr>
+        <tr><td><strong>我们的案例</strong></td><td><span class="tag tag-primary">主题澄清</span></td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-blue"><strong>多端适配是硬约束：</strong>同一个 App 会出现在宽窄差异很大的容器里。不写死像素宽度、窄容器有降级形态、交互不依赖 hover，两种 runMode 都要自测。</div>
+  </div>
+</div>
+
+<!-- 14 安全与边界 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 2 · 能力全景 · 安全与边界</div>
+    <h2 class="slide-title">安全与边界</h2>
+    <p class="slide-subtitle">沙箱换来的是安全，代价是一些“不能直接做”的事</p>
+    <div class="two-col">
+      <div>
+        <div class="mini-h">工具白名单</div>
+        <ul class="clean">
+          <li>业务工具必须登记在 <code class="inline">mcpConnector[].relateTools</code>，未登记直接被宿主拒绝</li>
+          <li>平台工具 <code class="inline">platform_*</code> 不受白名单约束</li>
+        </ul>
+        <div class="mini-h">沙箱限制</div>
+        <ul class="clean">
+          <li>直接下载被拦 → 走 <code class="inline">downloadFile</code></li>
+          <li>外部资源受 CSP 约束 → 资源尽量内联</li>
+          <li>宿主点击不传进 App → “点外部关闭”需监听 blur 兜底</li>
+          <li>iframe 只能盖住自己 → 确认框 / 弹窗交给宿主渲染</li>
+        </ul>
+      </div>
+      <div>
+        <div class="mini-h">上架包约束</div>
+        <ul class="clean">
+          <li>zip 一级目录正好是 <code class="inline">dist/</code> + <code class="inline">info.json</code></li>
+          <li>不超过 <span class="hl">5 MB</span>，mermaid 这类重依赖要懒加载或去掉</li>
+          <li>扩展名白名单 22 种，<code class="inline">.wasm</code>、<code class="inline">.md</code>、无后缀文件会被拒</li>
+          <li>生产构建建议关掉 sourcemap</li>
+        </ul>
+        <div class="mini-h">临时会话</div>
+        <ul class="clean">
+          <li>首轮对话会话 ID 为 <code class="inline">local_</code> 前缀，查询类平台工具返回空、写入类失败，要能静默降级</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 15 分隔 -->
+<div class="slide section-divider">
+  <div class="slide-content">
+    <div class="part-badge">PART 3 · 案例 · 主题澄清组件</div>
+    <h1>让用户点一下，而不是打一段字</h1>
+    <p>data_abi_post_v2_abi_ai_subject_clarify_mcpapp · 双向交互型</p>
+  </div>
+</div>
+
+<!-- 16 场景与决策 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 3 · 主题澄清 · 业务场景</div>
+    <h2 class="slide-title">什么时候弹出这张卡片</h2>
+    <p class="slide-subtitle">问数时主题发现给出多个同档候选，模型没法高置信地替用户决定</p>
+    <div class="two-col">
+      <div>
+        <div class="mini-h">selectSubjects 评分四档</div>
+        <table class="tbl">
+          <thead><tr><th>档位</th><th>score</th></tr></thead>
+          <tbody>
+            <tr><td>高度一致</td><td>90 ~ 100</td></tr>
+            <tr><td>明显相关</td><td>60 ~ 89</td></tr>
+            <tr><td>弱相关</td><td>30 ~ 59</td></tr>
+            <tr><td>不相关</td><td>0 ~ 29（不返回）</td></tr>
+          </tbody>
+        </table>
+        <div class="callout callout-blue" style="font-size:0.84rem"><strong>断档</strong>指相邻候选不在同一档，与分差大小无关。</div>
+      </div>
+      <div class="diagram" style="margin-top:0">
+        <div class="flow-v">
+          <div class="flow-node flow-node-start">nl2sql 调 selectSubjects</div>
+          <div class="flow-arrow-d">↓</div>
+          <div class="flow-node flow-node-decision">top1 &lt; 60？</div>
+          <div class="flow-label">是 → 引导用户用「选择主题」控件手动选</div>
+          <div class="flow-arrow-d">↓ 否</div>
+          <div class="flow-node flow-node-decision">只有 1 个候选，或 top2 断档？</div>
+          <div class="flow-label">是 → 直接采用 top1，不打扰用户</div>
+          <div class="flow-arrow-d">↓ 否（top1、top2 同档）</div>
+          <div class="flow-node flow-node-end">调用主题澄清组件<br>candidates = 与 top1 同档的全部候选</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 17 界面与交互 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 3 · 主题澄清 · 界面与交互</div>
+    <h2 class="slide-title">界面与交互</h2>
+    <p class="slide-subtitle">示意图：用户选中「销售订单分析」之后的状态</p>
+    <div class="mock">
+      <div class="mock-user">今年华东大区的销售额是多少？</div>
+      <div class="sc-list">
+        <div class="sc-card sel">
+          <div><b>销售订单分析 <span class="sc-rec">👍 推荐</span></b><div class="sc-desc">按订单维度统计销售额、数量、客户与区域分布</div></div>
+          <div class="sc-meta">所属空间 销售分析<br>创建人 张三</div>
+        </div>
+        <div class="sc-card dim">
+          <div><b>销售回款分析</b><div class="sc-desc">按回款单统计实收金额与回款周期</div></div>
+          <div class="sc-meta">所属空间 财务分析<br>创建人 李四</div>
+        </div>
+        <div class="sc-card dim">
+          <div><b>经营驾驶舱指标</b><div class="sc-desc">集团级经营指标汇总</div></div>
+          <div class="sc-meta">数据来源 数据云<br>所属空间 集团经营</div>
+        </div>
+        <div class="sc-card none dim">都不是</div>
+      </div>
+      <div class="mock-reply">→ 对话里出现用户消息「已选择主题：销售订单分析」，模型直接用回传的 subjectId 继续查数</div>
+    </div>
+    <div class="cards cards-3">
+      <div class="info-card"><h4>选中</h4><p>白底 + #495DFF 描边，其余卡片置灰锁定，不可重复提交。</p></div>
+      <div class="info-card"><h4>失败</h4><p>回传失败的卡片红色描边，下方出现「重试」；也可以换选别的卡片。</p></div>
+      <div class="info-card"><h4>都不是</h4><p>回传 <code class="inline">none-of-subjects</code>，模型引导用户补充业务对象、指标或范围后重新匹配。</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 18 数据流 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 3 · 主题澄清 · 数据流</div>
+    <h2 class="slide-title">数据流：一次点选，闭环回到模型</h2>
+    <p class="slide-subtitle">组件负责回传，模型调完组件立即停止本轮输出</p>
+    <div class="diagram">
+      <div class="flow-v">
+        <div class="flow-h">
+          <div class="flow-node">模型<small>selectSubjects 拿到同档候选</small></div>
+          <div class="flow-connector"><div class="flow-label">调用组件 →</div><div class="flow-label">{ query, candidates }</div></div>
+          <div class="flow-node flow-node-highlight">主题澄清组件<small>ontoolinput 解析校验后渲染</small></div>
+          <div class="flow-connector"><div class="flow-label">用户点选 →</div></div>
+          <div class="flow-node">updateModelContext<small>文本 + additional</small></div>
+        </div>
+        <div class="flow-arrow-d">↓ 回传成功后，后台静默执行</div>
+        <div class="flow-h">
+          <div class="flow-node-sm">platform_save_app_state<br>落库选中态</div>
+          <div class="flow-node-sm">recordsubjectselection<br>埋点（只记一次）</div>
+        </div>
+        <div class="flow-arrow-d">↓</div>
+        <div class="flow-node flow-node-end">模型收到「已选择主题：xxx」，按 subjectId + dataSourceType 继续查数</div>
+      </div>
+    </div>
+    <div class="code-label">交给模型的 additional（不在对话里展示，仅供模型读取）</div>
+<pre class="code">{ <span class="pn">"action"</span>: <span class="st">"select-subject"</span>, <span class="pn">"subjectId"</span>: <span class="st">"…"</span>, <span class="pn">"subjectName"</span>: <span class="st">"销售订单分析"</span>,
+  <span class="pn">"dataSourceType"</span>: <span class="st">"ABI"</span>, <span class="pn">"query"</span>: <span class="st">"今年华东大区的销售额是多少？"</span> }</pre>
+  </div>
+</div>
+
+<!-- 19 info.json -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 3 · 主题澄清 · 契约</div>
+    <h2 class="slide-title">info.json 与入参契约</h2>
+    <p class="slide-subtitle">平台看 info.json，模型看 inputSchema，两边必须对得上</p>
+    <div class="two-col">
+      <div>
+        <div class="code-label">info.json（节选）</div>
+<pre class="code">{
+  <span class="pn">"appCode"</span>: <span class="st">"data_abi_post_v2_abi_ai_subject_clarify_mcpapp"</span>,
+  <span class="pn">"appName"</span>: <span class="st">"主题澄清组件"</span>,
+  <span class="pn">"runMode"</span>: <span class="st">"message"</span>,
+  <span class="pn">"mcpConnector"</span>: [{
+    <span class="pn">"type"</span>: <span class="st">"XK"</span>,
+    <span class="pn">"relateTools"</span>: [
+      { <span class="pn">"name"</span>: <span class="st">"…_selectsubjects"</span> },
+      { <span class="pn">"name"</span>: <span class="st">"…_recordsubjectselection"</span> }
+    ]
+  }, { <span class="pn">"type"</span>: <span class="st">"XH"</span>, <span class="cm">/* 同上 */</span> }]
+}</pre>
+      </div>
+      <div>
+        <div class="mini-h">requestBody 字段</div>
+        <table class="tbl">
+          <thead><tr><th>字段</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><code>query</code> <span class="tag tag-primary">必填</span></td><td>用户原始问题，原样传入</td></tr>
+            <tr><td><code>candidates</code> <span class="tag tag-primary">必填</span></td><td>2 ~ 8 个候选，maxItems 8</td></tr>
+            <tr><td>└ <code>subjectId / subjectName</code></td><td>必填，原样来自 selectSubjects</td></tr>
+            <tr><td>└ <code>description / spaceName / creatorName</code></td><td>可空，空则隐藏该行</td></tr>
+            <tr><td>└ <code>recommended</code></td><td>只标在首位候选</td></tr>
+            <tr><td>└ <code>dataSourceType</code></td><td>ABI / DC，DC 显示数据来源</td></tr>
+            <tr><td>└ <code>score</code></td><td>不展示，只随埋点上报</td></tr>
+            <tr><td><code>prompt</code></td><td>可空的引导语</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 20 分隔 -->
+<div class="slide section-divider">
+  <div class="slide-content">
+    <div class="part-badge">PART 4 · 落地</div>
+    <h1>从案例到方法</h1>
+    <p>开发流程 · 交付流水线 · 踩坑清单</p>
+  </div>
+</div>
+
+<!-- 21 开发流程 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 4 · 落地 · 开发流程</div>
+    <h2 class="slide-title">开发流程</h2>
+    <p class="slide-subtitle">从参考项目起步，先注册再联调</p>
+    <div class="phase-flow">
+      <div class="phase-item">① 拷 demo_react<br><small>改 info.json / 配置</small></div>
+      <span class="step-arrow">→</span>
+      <div class="phase-item active-phase">② 先上传一次<br><small>完成 appCode 注册</small></div>
+      <span class="step-arrow">→</span>
+      <div class="phase-item">③ 本地开发联调</div>
+      <span class="step-arrow">→</span>
+      <div class="phase-item">④ 写调用技能<br><small>SKILL.md</small></div>
+      <span class="step-arrow">→</span>
+      <div class="phase-item">⑤ 验证</div>
+      <span class="step-arrow">→</span>
+      <div class="phase-item">⑥ 打包上架</div>
+    </div>
+    <table class="tbl">
+      <thead><tr><th>命令</th><th>用途</th><th>局限</th></tr></thead>
+      <tbody>
+        <tr><td><code>pnpm dev</code></td><td>纯前端迭代，HMR 改样式立刻生效</td><td>没有宿主，hostContext 为空、出站调用全失效</td></tr>
+        <tr><td><code>pnpm serve</code></td><td>构建后挂到 <code>/{env}/{appCode}/</code>，在真实 WebUI 里联调全部能力</td><td>每次改动要等增量构建，并刷新整个 WebUI 页面</td></tr>
+      </tbody>
+    </table>
+    <div class="code-label">WebUI 地址上加参数，宿主就会改从本地加载</div>
+<pre class="code">https://your-webui-domain.com/session/xxx?<span class="pn">lg_mcpapp_cdn</span>=<span class="st">http://localhost:4000</span>
+<span class="cm">// 本地路径没有 dist/ 一层：宿主取 http://localhost:4000/{env}/{appCode}/index.html</span></pre>
+    <div class="callout callout-blue"><strong>验证清单：</strong>入参能收到、工具能调通、高度正常、主题跟随、状态能恢复。</div>
+  </div>
+</div>
+
+<!-- 22 流水线 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 4 · 落地 · 交付流水线</div>
+    <h2 class="slide-title">我们的交付流水线</h2>
+    <p class="slide-subtitle">源码在 abi-skills，产物进 kingdee-lingee，CI 自动校验导入</p>
+    <div class="diagram">
+      <div class="flow-h">
+        <div class="flow-node">abi-skills/mcpapps/{appCode}<small>源码，dist 不入库</small></div>
+        <div class="flow-connector"><div class="flow-label">node build-mcapps.mjs →</div></div>
+        <div class="flow-node flow-node-highlight">mcapps/{appCode}<small>info.json + dist/，红线自检</small></div>
+        <div class="flow-connector"><div class="flow-label">rm -rf + cp -R →</div></div>
+        <div class="flow-node">kingdee-lingee/mcapps<small>review 后提交</small></div>
+        <div class="flow-connector"><div class="flow-label">CI →</div></div>
+        <div class="flow-node flow-node-end">打包 · 扫描 · 导入</div>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="info-card">
+        <h4>build-mcapps.mjs 做了什么</h4>
+        <ul class="clean">
+          <li>按名称 / 前缀 / 子串选择组件</li>
+          <li>缺 node_modules 自动 install，清空旧 dist 再构建</li>
+          <li>把 vite 的 <code class="inline">dist/dist</code> 双层结构组装成部署结构</li>
+          <li>自检：index.html 存在、扩展名白名单、单文件 ≤ 10MB</li>
+          <li>打印同步命令，提示部署仓库里的近似同名目录</li>
+        </ul>
+      </div>
+      <div class="info-card">
+        <h4>CI 校验码（节选）</h4>
+        <ul class="clean">
+          <li>KM-002/003 · appCode、appName 必填</li>
+          <li>KM-004 · dist/index.html 必须存在</li>
+          <li>KM-005~008 · entryTool 与两个 schema 合法 JSON</li>
+          <li>KM-009/010 · 非 platformApp 必须有 mcpConnector</li>
+          <li>KM-013 · 目录名必须等于 appCode</li>
+          <li>KM-014 · 扩展名白名单</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 23 踩坑 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 4 · 落地 · 踩坑清单</div>
+    <h2 class="slide-title">踩坑清单 Top 10</h2>
+    <p class="slide-subtitle">大多数“调了没反应”都在这张表里</p>
+    <table class="tbl">
+      <thead><tr><th>现象</th><th>原因</th><th>处理</th></tr></thead>
+      <tbody>
+        <tr><td>组件压根没被调起</td><td>appCode 没上架注册</td><td>先打包上传一次再联调</td></tr>
+        <tr><td>iframe 白屏</td><td>本地路径照搬了 <code>dist/</code> 一层，或没开 CORS</td><td>路径是 <code>/{env}/{appCode}/index.html</code></td></tr>
+        <tr><td>界面永久 loading</td><td>必填入参缺失，App 等不到就不启动</td><td>SKILL.md 标必填；App 给缺参提示</td></tr>
+        <tr><td>首屏一直不出</td><td>挂在 <code>ontoolresult</code> 上等</td><td>首屏只认 <code>ontoolinput</code></td></tr>
+        <tr><td><code>updateModelContext</code> 没反应</td><td>文本或 additional 有一个为空</td><td>两个都补齐，additional 是字符串</td></tr>
+        <tr><td>工具调用被拒</td><td>没登记在 <code>relateTools</code></td><td>补进 info.json 后重新上传</td></tr>
+        <tr><td>状态莫名丢失</td><td>iframe 超过 5 个被淘汰重建</td><td><code>platform_save / get_app_state</code></td></tr>
+        <tr><td>改完代码页面没更新</td><td>宿主内存缓存了资源</td><td>刷新整个 WebUI，不是只重开 App</td></tr>
+        <tr><td>样式像浏览器默认</td><td>没注入 Token / 没引 <code>lingee-ui/styles.css</code></td><td><code>applyHostStyleVariables</code> + 入口引样式</td></tr>
+        <tr><td>确认框盖不住客户端侧栏</td><td>在 App 里自己画了弹层</td><td>交给 <code>platform_show_confirm</code> / <code>open_modal</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 24 Q&A -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 4 · 落地 · Q&amp;A</div>
+    <h2 class="slide-title">常见问题</h2>
+    <p class="slide-subtitle">点击展开查看回答</p>
+    <details class="qa">
+      <summary>Q1：MCP App 和普通 MCP 工具有什么区别？</summary>
+      <div class="qa-body">
+        <p>普通工具返回数据给模型，由模型用文字转述。MCP App 返回的是<strong>一块界面</strong>：模型只负责决定何时调用、传什么参数，渲染、取数、交互都在前端完成，必要时再把结果交回模型。</p>
+      </div>
+    </details>
+    <details class="qa">
+      <summary>Q2：App 能直接调后端接口吗？</summary>
+      <div class="qa-body">
+        <p>不能直连。所有调用经 <strong>callServerTool → 宿主代理</strong>，业务工具必须登记在 info.json 的 <code class="inline">relateTools</code> 白名单里。外部资源也受宿主 CSP 约束。</p>
+      </div>
+    </details>
+    <details class="qa">
+      <summary>Q3：用户在 App 里的操作，模型怎么知道？</summary>
+      <div class="qa-body">
+        <p>用 <strong>updateModelContext</strong>：文本作为一条用户消息展示在对话里，<code class="inline">structuredContent.additional</code> 作为补充上下文只给模型读。需要模型立刻回复时也可以用 <code class="inline">sendMessage</code>。</p>
+      </div>
+    </details>
+    <details class="qa">
+      <summary>Q4：刷新页面后 App 里的状态还在吗？</summary>
+      <div class="qa-body">
+        <p>内存状态不在。需要保留的用 <strong>platform_save_app_state</strong> 按（会话, 消息）落库，启动时 <code class="inline">platform_get_app_state</code> 恢复。首轮临时会话（<code class="inline">local_</code>）写入会失败，要能静默降级。</p>
+      </div>
+    </details>
+    <details class="qa">
+      <summary>Q5：需要弹窗或表单时怎么办？</summary>
+      <div class="qa-body">
+        <p>纯文本确认用 <strong>platform_show_confirm</strong>；带表单、列表的用 <code class="inline">platform_open_modal</code> 或 <code class="inline">platform_open_sidebar</code>，把 App 自己的另一个页面开成弹窗或侧栏。承载页没有 AppBridge，数据靠 <code class="inline">params</code> 进、<code class="inline">result</code> 出。</p>
+      </div>
+    </details>
+    <details class="qa">
+      <summary>Q6：一个 App 能同时支持 message 和 sidebar 吗？</summary>
+      <div class="qa-body">
+        <p>runMode 写在 info.json 里，一个 appCode 只有一种。同一份代码可以上架成两个 appCode 分别验证，各配一份 SKILL.md。</p>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- 25 上线前的问题 -->
+<div class="slide">
+  <div class="slide-content">
+    <div class="part-badge">Part 4 · 落地 · 待解决</div>
+    <h2 class="slide-title">目前上线前的问题</h2>
+    <p class="slide-subtitle">以下两项解决之前，组件还不具备上线条件</p>
+    <div class="q-cards">
+      <div class="q-card">
+        <div class="q-num">01</div>
+        <p>新版流水线<span class="hl">跑不通</span></p>
+        <p class="q-sub">组件产物同步到 kingdee-lingee 后，需要经 CI 流水线打包、校验并导入平台。新版流水线目前还跑不通，组件无法按正常流程发布。</p>
+      </div>
+      <div class="q-card">
+        <div class="q-num">02</div>
+        <p>私有化环境只有 <span class="hl">XH / XK 其中一个</span></p>
+        <p class="q-sub">info.json 的 <code class="inline">mcpConnector</code> 同时声明了 XK 和 XH 两个连接器。生产环境（私有化部署）上可能只部署了其中一个，这个场景下组件会有问题。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<div class="nav">
+  <button id="prevBtn" onclick="navigate(-1)" title="上一页">←</button>
+  <span class="counter" id="counter">1 / 1</span>
+  <button id="nextBtn" onclick="navigate(1)" title="下一页">→</button>
+</div>
+
+<script>
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+const counter = document.getElementById('counter');
+const progressFill = document.getElementById('progressFill');
+const slideNum = document.getElementById('slideNum');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+
+function showSlide(index) {
+  if (index < 0 || index >= total) return;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = index;
+  slides[currentSlide].classList.add('active');
+  const content = slides[currentSlide].querySelector('.slide-content');
+  if (content) content.scrollTop = 0;
+  updateUI();
+}
+
+function navigate(dir) { showSlide(currentSlide + dir); }
+
+function updateUI() {
+  counter.textContent = (currentSlide + 1) + ' / ' + total;
+  progressFill.style.width = ((currentSlide + 1) / total * 100) + '%';
+  slideNum.textContent = (currentSlide + 1) + ' / ' + total;
+  prevBtn.disabled = currentSlide === 0;
+  nextBtn.disabled = currentSlide === total - 1;
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    var isActive = parseInt(item.dataset.slide) === currentSlide;
+    item.classList.toggle('active', isActive);
+    if (isActive) item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'SUMMARY') return;
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); navigate(1); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); navigate(-1); }
+  else if (e.key === 'Home') { e.preventDefault(); showSlide(0); }
+  else if (e.key === 'End') { e.preventDefault(); showSlide(total - 1); }
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', (e) => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) { if (diff > 0) navigate(1); else navigate(-1); }
+});
+
+function toggleSidebar() {
+  document.body.classList.toggle('collapsed');
+  document.getElementById('sidebarToggle').textContent = document.body.classList.contains('collapsed') ? '▶' : '◀';
+}
+
+showSlide(0);
+</script>
+</body>
+</html>

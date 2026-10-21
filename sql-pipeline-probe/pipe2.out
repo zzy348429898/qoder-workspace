@@ -1,0 +1,19 @@
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+PASS  SELECT REPLACE(name, 'a', 'b') AS n FROM t LIMIT 10  => SELECT REPLACE(name, 'a', 'b') AS n FROM perm_t LIMIT 10
+PASS  SELECT comment FROM t LIMIT 10  => SELECT comment FROM perm_t LIMIT 10
+PASS  SELECT name FROM t WHERE name = 'a;b' LIMIT 10  => SELECT name FROM perm_t WHERE name = 'a;b' LIMIT 10
+PASS  SELECT name FROM t WHERE note = 'x--y' LIMIT 10  => SELECT name FROM perm_t WHERE note = 'x--y' LIMIT 10
+PASS  (SELECT a FROM t LIMIT 1)  => (SELECT a FROM perm_t LIMIT 1)
+PASS  SELECT * FROM t  => SELECT * FROM perm_t
+REJ   SELECT a FROM read_csv('/etc/passwd') LIMIT 1  => code=1032005 SQL 包含不支持的查询结构 | root=exists unsupported function on FROM : COLLECTION_TABLE
+log4j:WARN No appenders could be found for logger (com.kingdee.abi).
+log4j:WARN Please initialize the log4j system properly.
+REJ   SELECT getenv('HOME') LIMIT 1  => code=1032004 SQL 不允许调用敏感函数或上下文关键字：GETENV
+PASS  WITH x AS (SELECT a FROM t LIMIT 1) SELECT a FROM x  => WITH x AS (SELECT a FROM perm_t LIMIT 1) SELECT a FROM x
+REJ   SELECT a FROM t WHERE id IN (SELECT id FROM secret) LIMIT 1  => code=1032003 table secret not exist.
+REJ   SELECT a FROM t WHERE id IN (SELECT * FROM read_csv('/etc/passwd')) LIMIT 1  => code=1032005 SQL 包含不支持的查询结构 | root=exists unsupported function on FROM : COLLECTION_TABLE
+PASS  SELECT a FROM t LIMIT 5000  => SELECT a FROM perm_t LIMIT 5000
+PASS  SELECT a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11 FROM t LIMIT 1  => SELECT a1,a2,a3,a4,a5,a6,a7,a8,a9,a10,a11 FROM perm_t LIMIT 1
+REJ   SELECT begin_date, show FROM t LIMIT 1  => code=1032004 SQL 语法无效，请检查查询语句 | root=Encountered "show" at line 1, column 20.

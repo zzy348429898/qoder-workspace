@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="760" viewBox="0 0 1400 760" font-family="PingFang SC, Microsoft YaHei, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
+    </marker>
+    <style>
+      .h1 { font-size: 28px; font-weight: 700; fill: #111; }
+      .h2 { font-size: 22px; font-weight: 700; fill: #222; }
+      .sub { font-size: 15px; fill: #777; }
+      .set { font-size: 15px; font-weight: 700; fill: #555; }
+      .item { font-size: 17px; font-weight: 600; fill: #222; }
+      .cnt { font-size: 17px; font-weight: 700; }
+      .conn { font-size: 16px; font-weight: 700; fill: #333; }
+      .line { stroke: #888; stroke-width: 1.6; fill: none; }
+    </style>
+  </defs>
+
+  <rect width="1400" height="760" fill="#fafafa"/>
+  <text x="700" y="50" text-anchor="middle" class="h1">当前方案 vs 平台建议方案</text>
+
+  <!-- ================= 左：当前方案 ================= -->
+  <rect x="30" y="80" width="480" height="640" rx="14" fill="#fff" stroke="#ddd"/>
+  <text x="270" y="122" text-anchor="middle" class="h2">当前方案：1 套</text>
+  <text x="270" y="148" text-anchor="middle" class="sub">一套资产同时声明 XK + XH</text>
+
+  <rect x="110" y="172" width="320" height="236" rx="12" fill="#f7f8fa" stroke="#999" stroke-dasharray="6 4"/>
+  <text x="130" y="198" class="set">通用套</text>
+
+  <rect x="130" y="212" width="280" height="50" rx="8" fill="#fff4e0" stroke="#e28800"/>
+  <text x="150" y="243" class="item">Agent</text>
+  <text x="390" y="243" text-anchor="end" class="cnt" style="fill:#c25e00">×1</text>
+
+  <rect x="130" y="274" width="280" height="50" rx="8" fill="#f3f0ff" stroke="#7f2af3"/>
+  <text x="150" y="305" class="item">Skill</text>
+  <text x="390" y="305" text-anchor="end" class="cnt" style="fill:#5a1fb0">×8</text>
+
+  <rect x="130" y="336" width="280" height="50" rx="8" fill="#e8f0fe" stroke="#4a6cf7"/>
+  <text x="150" y="367" class="item">MCP App</text>
+  <text x="390" y="367" text-anchor="end" class="cnt" style="fill:#2f45c7">×1</text>
+
+  <line x1="230" y1="408" x2="160" y2="478" class="line" marker-end="url(#arr)"/>
+  <line x1="310" y1="408" x2="380" y2="478" class="line" marker-end="url(#arr)"/>
+
+  <rect x="80" y="480" width="160" height="50" rx="8" fill="#fff" stroke="#888"/>
+  <text x="160" y="511" text-anchor="middle" class="conn">XK 连接器</text>
+  <rect x="300" y="480" width="160" height="50" rx="8" fill="#fff" stroke="#888"/>
+  <text x="380" y="511" text-anchor="middle" class="conn">XH 连接器</text>
+
+  <rect x="80" y="556" width="380" height="44" rx="8" fill="#fde2e2" stroke="#d93026"/>
+  <text x="270" y="584" text-anchor="middle" style="font-size:16px;font-weight:700;fill:#d93026">MCP App 上传校验失败 ✗</text>
+
+  <text x="270" y="672" text-anchor="middle" style="font-size:18px;fill:#555">需维护资产</text>
+  <text x="270" y="706" text-anchor="middle" style="font-size:30px;font-weight:700;fill:#222">10 个</text>
+
+  <!-- 中间箭头 -->
+  <path d="M528,400 L582,400" stroke="#bbb" stroke-width="6" fill="none"/>
+  <path d="M580,384 L604,400 L580,416 z" fill="#bbb"/>
+
+  <!-- ================= 右：平台建议方案 ================= -->
+  <rect x="620" y="80" width="750" height="640" rx="14" fill="#fff" stroke="#ddd"/>
+  <text x="995" y="122" text-anchor="middle" class="h2">平台建议方案：2 套</text>
+  <text x="995" y="148" text-anchor="middle" class="sub">按连接器拆分，每套只声明一个连接器</text>
+
+  <!-- XK 套 -->
+  <rect x="660" y="172" width="320" height="236" rx="12" fill="#f7f8fa" stroke="#999" stroke-dasharray="6 4"/>
+  <text x="680" y="198" class="set">XK 套</text>
+  <rect x="680" y="212" width="280" height="50" rx="8" fill="#fff4e0" stroke="#e28800"/>
+  <text x="700" y="243" class="item">Agent-xk</text>
+  <text x="940" y="243" text-anchor="end" class="cnt" style="fill:#c25e00">×1</text>
+  <rect x="680" y="274" width="280" height="50" rx="8" fill="#f3f0ff" stroke="#7f2af3"/>
+  <text x="700" y="305" class="item">Skill-xk</text>
+  <text x="940" y="305" text-anchor="end" class="cnt" style="fill:#5a1fb0">×8</text>
+  <rect x="680" y="336" width="280" height="50" rx="8" fill="#e8f0fe" stroke="#4a6cf7"/>
+  <text x="700" y="367" class="item">MCP App-xk</text>
+  <text x="940" y="367" text-anchor="end" class="cnt" style="fill:#2f45c7">×1</text>
+
+  <line x1="820" y1="408" x2="820" y2="478" class="line" marker-end="url(#arr)"/>
+  <rect x="740" y="480" width="160" height="50" rx="8" fill="#fff" stroke="#888"/>
+  <text x="820" y="511" text-anchor="middle" class="conn">XK 连接器</text>
+
+  <!-- XH 套 -->
+  <rect x="1010" y="172" width="320" height="236" rx="12" fill="#f7f8fa" stroke="#999" stroke-dasharray="6 4"/>
+  <text x="1030" y="198" class="set">XH 套</text>
+  <rect x="1030" y="212" width="280" height="50" rx="8" fill="#fff4e0" stroke="#e28800"/>
+  <text x="1050" y="243" class="item">Agent-xh</text>
+  <text x="1290" y="243" text-anchor="end" class="cnt" style="fill:#c25e00">×1</text>
+  <rect x="1030" y="274" width="280" height="50" rx="8" fill="#f3f0ff" stroke="#7f2af3"/>
+  <text x="1050" y="305" class="item">Skill-xh</text>
+  <text x="1290" y="305" text-anchor="end" class="cnt" style="fill:#5a1fb0">×8</text>
+  <rect x="1030" y="336" width="280" height="50" rx="8" fill="#e8f0fe" stroke="#4a6cf7"/>
+  <text x="1050" y="367" class="item">MCP App-xh</text>
+  <text x="1290" y="367" text-anchor="end" class="cnt" style="fill:#2f45c7">×1</text>
+
+  <line x1="1170" y1="408" x2="1170" y2="478" class="line" marker-end="url(#arr)"/>
+  <rect x="1090" y="480" width="160" height="50" rx="8" fill="#fff" stroke="#888"/>
+  <text x="1170" y="511" text-anchor="middle" class="conn">XH 连接器</text>
+
+  <rect x="660" y="556" width="670" height="44" rx="8" fill="#e3f7e8" stroke="#04b545"/>
+  <text x="995" y="584" text-anchor="middle" style="font-size:16px;font-weight:700;fill:#078e3b">上传校验通过 ✓</text>
+
+  <!-- 资产 ×2 强调 -->
+  <rect x="660" y="624" width="670" height="80" rx="12" fill="#fff1e6" stroke="#ff7700" stroke-width="2"/>
+  <text x="700" y="672" style="font-size:18px;fill:#555">需维护资产</text>
+  <text x="820" y="676" style="font-size:30px;font-weight:700;fill:#222">20 个</text>
+  <text x="935" y="676" style="font-size:40px;font-weight:800;fill:#ff7700">×2</text>
+  <text x="1010" y="660" style="font-size:15px;fill:#a04a00">每次改 agent / skill / mcpapp 都要改两份、</text>
+  <text x="1010" y="684" style="font-size:15px;fill:#a04a00">发两次版，任一侧漏改两套行为就会不一致</text>
+</svg>

@@ -4,13 +4,19 @@
 			"path": "."
 		},
 		{
+			"path": "../code/kingdee-lingee"
+		},
+		{
+			"path": "../code/abi-skills"
+		},
+		{
 			"path": "../code/abi/abi-platform"
 		},
 		{
 			"path": "../code/control_plane"
 		},
 		{
-			"path": "../code/kingdee-lingee"
+			"path": "../aievaltest"
 		}
 	],
 	"settings": {}

@@ -1,0 +1,123 @@
+CREATE DATABASE IF NOT EXISTS abi_acceptance DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE abi_acceptance;
+DROP TABLE IF EXISTS 收款计划表头;
+DROP TABLE IF EXISTS 收款计划明细;
+CREATE TABLE 收款计划表头 (
+  单据编号   VARCHAR(32)  NOT NULL PRIMARY KEY,
+  客户名称   VARCHAR(64)  NOT NULL,
+  销售组织   VARCHAR(64)  NOT NULL,
+  单据状态   VARCHAR(16)  NOT NULL,
+  币种       VARCHAR(16)  NOT NULL,
+  签订年份   INT          NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE 收款计划明细 (
+  行ID       VARCHAR(16)  NOT NULL PRIMARY KEY,
+  单据编号   VARCHAR(32)  NOT NULL,
+  费用类型   VARCHAR(16)  NOT NULL,
+  未结算金额 DECIMAL(18,2) NOT NULL,
+  KEY idx_单据编号 (单据编号)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+INSERT INTO 收款计划表头 VALUES ('ARP2025001', '华东重工集团', '华东销售组织', '已审核', '人民币', 2025);
+INSERT INTO 收款计划表头 VALUES ('ARP2025002', '华东重工集团', '华东销售组织', '已审核', '人民币', 2025);
+INSERT INTO 收款计划表头 VALUES ('ARP2025003', '华南电子科技', '华南销售组织', '已审核', '人民币', 2025);
+INSERT INTO 收款计划表头 VALUES ('ARP2025004', '华南电子科技', '华南销售组织', '已审核', '人民币', 2025);
+INSERT INTO 收款计划表头 VALUES ('ARP2025005', '北方机械制造', '北方销售组织', '已审核', '人民币', 2025);
+INSERT INTO 收款计划表头 VALUES ('ARP2025006', '北方机械制造', '北方销售组织', '已审核', '人民币', 2025);
+INSERT INTO 收款计划表头 VALUES ('ARP2025007', '西南能源股份', '华南销售组织', '已审核', '人民币', 2025);
+INSERT INTO 收款计划表头 VALUES ('ARP2025008', '西南能源股份', '华南销售组织', '已审核', '人民币', 2025);
+INSERT INTO 收款计划表头 VALUES ('ARP2025009', '中部汽车配件', '华东销售组织', '已审核', '人民币', 2025);
+INSERT INTO 收款计划表头 VALUES ('ARP2025010', '中部汽车配件', '华东销售组织', '已审核', '人民币', 2025);
+INSERT INTO 收款计划表头 VALUES ('ARP2026001', '华东重工集团', '华东销售组织', '已审核', '人民币', 2026);
+INSERT INTO 收款计划表头 VALUES ('ARP2026002', '华东重工集团', '华东销售组织', '已审核', '人民币', 2026);
+INSERT INTO 收款计划表头 VALUES ('ARP2026003', '华南电子科技', '华南销售组织', '已审核', '人民币', 2026);
+INSERT INTO 收款计划表头 VALUES ('ARP2026004', '华南电子科技', '华南销售组织', '已审核', '人民币', 2026);
+INSERT INTO 收款计划表头 VALUES ('ARP2026005', '北方机械制造', '北方销售组织', '已审核', '人民币', 2026);
+INSERT INTO 收款计划表头 VALUES ('ARP2026006', '北方机械制造', '北方销售组织', '已审核', '人民币', 2026);
+INSERT INTO 收款计划表头 VALUES ('ARP2026007', '西南能源股份', '华南销售组织', '已审核', '人民币', 2026);
+INSERT INTO 收款计划表头 VALUES ('ARP2026008', '西南能源股份', '华南销售组织', '已审核', '人民币', 2026);
+INSERT INTO 收款计划表头 VALUES ('ARP2026009', '中部汽车配件', '华东销售组织', '已审核', '人民币', 2026);
+INSERT INTO 收款计划表头 VALUES ('ARP2026010', '中部汽车配件', '华东销售组织', '已审核', '人民币', 2026);
+INSERT INTO 收款计划明细 VALUES ('E0001', 'ARP2025001', '货款', 60000);
+INSERT INTO 收款计划明细 VALUES ('E0002', 'ARP2025001', '货款', 20000);
+INSERT INTO 收款计划明细 VALUES ('E0003', 'ARP2025001', '运费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0004', 'ARP2025001', '服务费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0005', 'ARP2025002', '货款', 60000);
+INSERT INTO 收款计划明细 VALUES ('E0006', 'ARP2025002', '货款', 20000);
+INSERT INTO 收款计划明细 VALUES ('E0007', 'ARP2025002', '运费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0008', 'ARP2025002', '服务费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0009', 'ARP2025003', '货款', 60000);
+INSERT INTO 收款计划明细 VALUES ('E0010', 'ARP2025003', '货款', 20000);
+INSERT INTO 收款计划明细 VALUES ('E0011', 'ARP2025003', '运费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0012', 'ARP2025003', '服务费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0013', 'ARP2025004', '货款', 60000);
+INSERT INTO 收款计划明细 VALUES ('E0014', 'ARP2025004', '货款', 20000);
+INSERT INTO 收款计划明细 VALUES ('E0015', 'ARP2025004', '运费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0016', 'ARP2025004', '服务费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0017', 'ARP2025005', '货款', 60000);
+INSERT INTO 收款计划明细 VALUES ('E0018', 'ARP2025005', '货款', 20000);
+INSERT INTO 收款计划明细 VALUES ('E0019', 'ARP2025005', '运费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0020', 'ARP2025005', '服务费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0021', 'ARP2025006', '货款', 60000);
+INSERT INTO 收款计划明细 VALUES ('E0022', 'ARP2025006', '货款', 20000);
+INSERT INTO 收款计划明细 VALUES ('E0023', 'ARP2025006', '运费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0024', 'ARP2025006', '服务费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0025', 'ARP2025007', '货款', 60000);
+INSERT INTO 收款计划明细 VALUES ('E0026', 'ARP2025007', '货款', 20000);
+INSERT INTO 收款计划明细 VALUES ('E0027', 'ARP2025007', '运费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0028', 'ARP2025007', '服务费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0029', 'ARP2025008', '货款', 60000);
+INSERT INTO 收款计划明细 VALUES ('E0030', 'ARP2025008', '货款', 20000);
+INSERT INTO 收款计划明细 VALUES ('E0031', 'ARP2025008', '运费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0032', 'ARP2025008', '服务费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0033', 'ARP2025009', '货款', 60000);
+INSERT INTO 收款计划明细 VALUES ('E0034', 'ARP2025009', '货款', 20000);
+INSERT INTO 收款计划明细 VALUES ('E0035', 'ARP2025009', '运费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0036', 'ARP2025009', '服务费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0037', 'ARP2025010', '货款', 60000);
+INSERT INTO 收款计划明细 VALUES ('E0038', 'ARP2025010', '货款', 20000);
+INSERT INTO 收款计划明细 VALUES ('E0039', 'ARP2025010', '运费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0040', 'ARP2025010', '服务费', 10000);
+INSERT INTO 收款计划明细 VALUES ('E0041', 'ARP2026001', '货款', 143000);
+INSERT INTO 收款计划明细 VALUES ('E0042', 'ARP2026001', '货款', 59400);
+INSERT INTO 收款计划明细 VALUES ('E0043', 'ARP2026001', '运费', 8800);
+INSERT INTO 收款计划明细 VALUES ('E0044', 'ARP2026001', '服务费', 8800);
+INSERT INTO 收款计划明细 VALUES ('E0045', 'ARP2026002', '货款', 143000);
+INSERT INTO 收款计划明细 VALUES ('E0046', 'ARP2026002', '货款', 59400);
+INSERT INTO 收款计划明细 VALUES ('E0047', 'ARP2026002', '运费', 8800);
+INSERT INTO 收款计划明细 VALUES ('E0048', 'ARP2026002', '服务费', 8800);
+INSERT INTO 收款计划明细 VALUES ('E0049', 'ARP2026003', '货款', 71500);
+INSERT INTO 收款计划明细 VALUES ('E0050', 'ARP2026003', '货款', 29700);
+INSERT INTO 收款计划明细 VALUES ('E0051', 'ARP2026003', '运费', 4400);
+INSERT INTO 收款计划明细 VALUES ('E0052', 'ARP2026003', '服务费', 4400);
+INSERT INTO 收款计划明细 VALUES ('E0053', 'ARP2026004', '货款', 71500);
+INSERT INTO 收款计划明细 VALUES ('E0054', 'ARP2026004', '货款', 29700);
+INSERT INTO 收款计划明细 VALUES ('E0055', 'ARP2026004', '运费', 4400);
+INSERT INTO 收款计划明细 VALUES ('E0056', 'ARP2026004', '服务费', 4400);
+INSERT INTO 收款计划明细 VALUES ('E0057', 'ARP2026005', '货款', 65000);
+INSERT INTO 收款计划明细 VALUES ('E0058', 'ARP2026005', '货款', 27000);
+INSERT INTO 收款计划明细 VALUES ('E0059', 'ARP2026005', '运费', 4000);
+INSERT INTO 收款计划明细 VALUES ('E0060', 'ARP2026005', '服务费', 4000);
+INSERT INTO 收款计划明细 VALUES ('E0061', 'ARP2026006', '货款', 65000);
+INSERT INTO 收款计划明细 VALUES ('E0062', 'ARP2026006', '货款', 27000);
+INSERT INTO 收款计划明细 VALUES ('E0063', 'ARP2026006', '运费', 4000);
+INSERT INTO 收款计划明细 VALUES ('E0064', 'ARP2026006', '服务费', 4000);
+INSERT INTO 收款计划明细 VALUES ('E0065', 'ARP2026007', '货款', 65000);
+INSERT INTO 收款计划明细 VALUES ('E0066', 'ARP2026007', '货款', 27000);
+INSERT INTO 收款计划明细 VALUES ('E0067', 'ARP2026007', '运费', 4000);
+INSERT INTO 收款计划明细 VALUES ('E0068', 'ARP2026007', '服务费', 4000);
+INSERT INTO 收款计划明细 VALUES ('E0069', 'ARP2026008', '货款', 65000);
+INSERT INTO 收款计划明细 VALUES ('E0070', 'ARP2026008', '货款', 27000);
+INSERT INTO 收款计划明细 VALUES ('E0071', 'ARP2026008', '运费', 4000);
+INSERT INTO 收款计划明细 VALUES ('E0072', 'ARP2026008', '服务费', 4000);
+INSERT INTO 收款计划明细 VALUES ('E0073', 'ARP2026009', '货款', 78000);
+INSERT INTO 收款计划明细 VALUES ('E0074', 'ARP2026009', '货款', 32400);
+INSERT INTO 收款计划明细 VALUES ('E0075', 'ARP2026009', '运费', 4800);
+INSERT INTO 收款计划明细 VALUES ('E0076', 'ARP2026009', '服务费', 4800);
+INSERT INTO 收款计划明细 VALUES ('E0077', 'ARP2026010', '货款', 78000);
+INSERT INTO 收款计划明细 VALUES ('E0078', 'ARP2026010', '货款', 32400);
+INSERT INTO 收款计划明细 VALUES ('E0079', 'ARP2026010', '运费', 4800);
+INSERT INTO 收款计划明细 VALUES ('E0080', 'ARP2026010', '服务费', 4800);
+-- ===== 验收基准校验 =====
+SELECT 签订年份, SUM(d.未结算金额) AS 总额, COUNT(*) AS 行数 FROM 收款计划明细 d JOIN 收款计划表头 h ON d.单据编号=h.单据编号 GROUP BY 签订年份;
+SELECT h.客户名称, SUM(CASE WHEN h.签订年份=2025 THEN d.未结算金额 ELSE 0 END) AS y2025, SUM(CASE WHEN h.签订年份=2026 THEN d.未结算金额 ELSE 0 END) AS y2026 FROM 收款计划明细 d JOIN 收款计划表头 h ON d.单据编号=h.单据编号 GROUP BY h.客户名称 ORDER BY y2026-y2025 DESC;
+SELECT d.费用类型, SUM(CASE WHEN h.签订年份=2025 THEN d.未结算金额 ELSE 0 END) AS y2025, SUM(CASE WHEN h.签订年份=2026 THEN d.未结算金额 ELSE 0 END) AS y2026 FROM 收款计划明细 d JOIN 收款计划表头 h ON d.单据编号=h.单据编号 GROUP BY d.费用类型;

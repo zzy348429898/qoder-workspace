@@ -1,0 +1,38 @@
+OK   CREATE TABLE t_sales(id INT, amount INT)
+OK   INSERT INTO t_sales VALUES (1, 10), (2, 20)
+OK   CREATE TABLE t_other(x INT)
+OK   INSERT INTO t_other VALUES (42)
+== 1. root 形态
+OK   SELECT version() -> v1.4.3
+OK   ATTACH '/var/folders/zb/js5hwdbd3hx142lxz0j9xty80000gn/T/duckprobe6160582495556884576/shard_a.duckdb' AS s_a (READ_ONLY)
+OK   ATTACH '/var/folders/zb/js5hwdbd3hx142lxz0j9xty80000gn/T/duckprobe6160582495556884576/shard_b.duckdb' AS s_b (READ_ONLY)
+OK   CREATE OR REPLACE TEMP VIEW "perm_t_sales" AS SELECT * FROM s_a.t_sales WHERE id = 1
+OK   SELECT count(*) FROM perm_t_sales -> 1
+== 2. 其它会话 ATTACH 的分片在本会话可见吗
+OK   SELECT x FROM s_b.t_other -> 42
+== 3. TEMP VIEW 是否跨 duplicate 连接可见
+FAIL SELECT count(*) FROM perm_t_sales  => Catalog Error: Table with name perm_t_sales does not exist!
+== 4. 双引号上下文关键字回退绑定
+OK   SELECT "current_user" -> duckdb
+OK   SELECT "current_user" FROM perm_t_sales -> duckdb
+OK   SELECT "user" -> duckdb
+== 5. 默认外部访问
+OK   SELECT * FROM read_csv('/var/folders/zb/js5hwdbd3hx142lxz0j9xty80000gn/T/duckprobe6160582495556884576/secret.csv') -> TOPSECRET
+OK   SELECT current_setting('enable_external_access') -> true
+OK   SELECT getvariable('x') -> null
+== 6. 关闭外部访问后的行为（在 root 上 SET，看 duplicate 会话是否继承）
+OK   SET enable_external_access = false
+FAIL SELECT * FROM read_csv('/var/folders/zb/js5hwdbd3hx142lxz0j9xty80000gn/T/duckprobe6160582495556884576/secret.csv')  => Permission Error: Cannot access file "/var/folders/zb/js5hwdbd3hx142lxz0j9xty80000gn/T/duckprobe6160582495556884576/secret.csv" - file system operations are disabled by configuration
+OK   SELECT count(*) FROM s_a.t_sales -> 2
+OK   CREATE OR REPLACE TEMP VIEW "perm_t_sales" AS SELECT * FROM s_a.t_sales
+FAIL ATTACH '/var/folders/zb/js5hwdbd3hx142lxz0j9xty80000gn/T/duckprobe6160582495556884576/shard_c.duckdb' AS s_c (READ_ONLY)  => Permission Error: Cannot access file "/var/folders/zb/js5hwdbd3hx142lxz0j9xty80000gn/T/duckprobe6160582495556884576/shard_c.duckdb" - file system operations are disabled by configuration
+OK   DETACH s_b
+OK   ATTACH '/var/folders/zb/js5hwdbd3hx142lxz0j9xty80000gn/T/duckprobe6160582495556884576/shard_b.duckdb' AS s_b (READ_ONLY)
+FAIL SET enable_external_access = true  => Invalid Input Error: Cannot change enable_external_access setting while database is running
+OK   SET lock_configuration = true
+FAIL SET memory_limit = '1GB'  => Invalid Input Error: Cannot change configuration option "memory_limit" - the configuration has been locked
+== 7. 查询超时
+timeout after 1004ms => INTERRUPT Error: Interrupted!
+== 8. 列不存在时的报错是否回显视图/物理名
+FAIL SELECT nope FROM perm_t_sales  => Binder Error: Referenced column "nope" not found in FROM clause!
+FAIL SELECT amount FROM perm_t_sales p JOIN perm_t_sales q ON p.id = q.id  => Binder Error: Ambiguous reference to column name "amount" (use: "p.amount" or "q.amount")

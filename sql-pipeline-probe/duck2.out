@@ -1,0 +1,27 @@
+OK   CREATE TABLE t_a(id INT, amount INT)
+OK   CREATE TABLE t_d(id INT, amount INT)
+OK   CREATE TABLE t_o(id INT, amount INT)
+== A. 只 SET enable_external_access=false：已挂载 vs 未挂载的已存在文件
+OK   ATTACH '<dir>/a.duckdb' AS s_a (READ_ONLY)
+OK   SET enable_external_access = false
+FAIL ATTACH '<dir>/d.duckdb' AS s_d (READ_ONLY)  => Permission Error: Cannot access file "<dir>/d.duckdb" - file system operations are disabled by configuration
+OK   SELECT current_setting('allowed_paths') -> [/var/folders/zb/js5hwdbd3hx142lxz0j9xty80000gn/T/duckprobe1417396931210346324/a.duckdb.wal, /var/folders/zb/js5hwdbd3hx142lxz0j9xty80000gn/T/duckprobe1417396931210346324/a.duckdb]
+== B. 先 SET allowed_directories=[dataDir] 再关闭外部访问
+OK   SET allowed_directories = ['<dir>/']
+OK   SET enable_external_access = false
+OK   SET lock_configuration = true
+OK   ATTACH '<dir>/d.duckdb' AS s_d (READ_ONLY)
+FAIL ATTACH '<dir>/o.duckdb' AS s_o (READ_ONLY)  => Permission Error: Cannot access file "<dir>/o.duckdb" - file system operations are disabled by configuration
+OK   SELECT count(*) FROM s_d.t_d -> 0
+OK   SELECT * FROM read_csv('<dir>/in.csv') -> IN
+FAIL SELECT * FROM read_text('<dir>/a.duckdb')  => Invalid Input Error: read_text: could not read content of file '<dir>/a.duckdb' as valid UTF-8 encoded text. You may want to use read_blob instead.
+FAIL SET enable_external_access = true  => Invalid Input Error: Cannot change configuration option "enable_external_access" - the configuration has been locked
+FAIL SET allowed_directories = ['/']  => Invalid Input Error: Cannot change configuration option "allowed_directories" - the configuration has been locked
+== C. 通过 JDBC 连接属性在打开时设置
+FAIL open with props => Catalog Error: Failed to set configuration option "allowed_directories", error: Cannot change allowed_directories when enable_external_access is disabled
+== D. 报错回显
+OK   ATTACH '<dir>/a.duckdb' AS s_a (READ_ONLY)
+OK   CREATE TEMP VIEW "perm_t_a" AS SELECT * FROM s_a.t_a
+FAIL SELECT amout FROM "perm_t_a"  => Binder Error: Referenced column "amout" not found in FROM clause! Candidate bindings: "amount"  LINE 1: SELECT amout FROM "perm_t_a"                ^
+FAIL SELECT x.amount FROM "perm_t_a"  => Binder Error: Referenced table "x" not found! Candidate tables: "perm_t_a"  LINE 1: SELECT x.amount FROM "perm_t_a"                ^
+FAIL SELECT amount + 'abc' FROM "perm_t_a"  => Binder Error: Could not choose a best candidate function for the function call "+(INTEGER, STRING_LITERAL)". In order to select one, please add explicit type casts. 	Candidate functions: 	+(INTEGER, DATE) -> DATE 	+(INTEGER, INTEGER) -> INTEGER   LINE 1: SELECT amount + 'abc' FROM "perm_t_a"                       ^

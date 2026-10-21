@@ -1,0 +1,8 @@
+OK   SET jdbc_stream_results = 'true'
+OK   SET scheduler_process_partial = 'true'
+OK   SET memory_limit = '512MB'
+OK   SET preserve_insertion_order = 'false'
+OK   SELECT current_setting('memory_limit') -> 488.2 MiB
+OK   SELECT current_setting('preserve_insertion_order') -> false
+OK   SET memory_limit = '8GB'
+OK   SELECT current_setting('memory_limit') -> 7.4 GiB

@@ -1,0 +1,14 @@
+REJ  SELECT REPLACE(name, 'a', 'b') AS n FROM t LIMIT 10  => 不允许 DELETE、INSERT、UPDATE、CREATE、ALTER、DROP 等非 SELECT 类语句
+REJ  SELECT comment FROM t LIMIT 10  => 不允许 DELETE、INSERT、UPDATE、CREATE、ALTER、DROP 等非 SELECT 类语句
+REJ  SELECT "comment" FROM t LIMIT 10  => SQL 解析失败（AST）: net.sf.jsqlparser.parser.CCJSqlParserUtil
+REJ  SELECT name FROM t WHERE name = 'a;b' LIMIT 10  => 不允许一次提交多条 SQL 语句
+REJ  SELECT name FROM t WHERE note = 'x--y' LIMIT 10  => SQL 解析失败（AST）: net.sf.jsqlparser.parser.CCJSqlParserUtil
+REJ  SELECT update_time FROM t LIMIT 1  => SQL 解析失败（AST）: net.sf.jsqlparser.parser.CCJSqlParserUtil
+REJ  SELECT a FROM read_csv('/etc/passwd') LIMIT 1  => SQL 解析失败（AST）: net.sf.jsqlparser.parser.CCJSqlParserUtil
+REJ  SELECT getenv('HOME') LIMIT 1  => SQL 解析失败（AST）: net.sf.jsqlparser.parser.CCJSqlParserUtil
+REJ  (SELECT a FROM t LIMIT 1)  => 仅允许 SELECT 查询（可使用 WITH ... AS (...)），不允许 DELETE、INSERT、UPDATE、CREATE、ALTER 等其他语句
+REJ  SELECT a FROM t;   => SQL 解析失败（AST）: net.sf.jsqlparser.parser.CCJSqlParserUtil
+REJ  SELECT a FROM t /* ; DROP */ LIMIT 1  => SQL 解析失败（AST）: net.sf.jsqlparser.parser.CCJSqlParserUtil
+REJ  SELECT begin_date FROM t LIMIT 1  => SQL 解析失败（AST）: net.sf.jsqlparser.parser.CCJSqlParserUtil
+REJ  SELECT 1 AS "show" LIMIT 1  => SQL 解析失败（AST）: net.sf.jsqlparser.parser.CCJSqlParserUtil
+REJ  SELECT a FROM t WHERE x = 'it''s; ok' LIMIT 1  => 不允许一次提交多条 SQL 语句

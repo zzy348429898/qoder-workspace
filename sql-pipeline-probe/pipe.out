@@ -1,0 +1,61 @@
+SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+PASS  SELECT * FROM sales
+      => SELECT * FROM perm_t_sales  tables=[perm_t_sales]
+PASS  SELECT * FROM "sales" s WHERE s.id > 0
+      => SELECT * FROM perm_t_sales s WHERE s.id > 0  tables=[perm_t_sales]
+PASS  SELECT * FROM sales⇥JOIN sales b ON sales.id = b.id
+      => SELECT * FROM perm_t_sales⇥JOIN perm_t_sales b ON perm_t_sales.id = b.id  tables=[perm_t_sales]
+REJ   SELECT * FROM read_csv('/etc/passwd')
+      => code=1032005 msg=SQL 包含不支持的查询结构 | root=exists unsupported function on FROM : COLLECTION_TABLE
+REJ   SELECT * FROM (VALUES (1)) AS v(a)
+      => code=1032005 msg=SQL 包含不支持的查询结构 | root=exists unsupported function on FROM : VALUES
+REJ   VALUES (1)
+      => code=1032005 msg=SQL 包含不支持的查询结构
+REJ   SELECT * FROM sales, LATERAL (SELECT 1) x
+      => code=1032005 msg=SQL 包含不支持的查询结构 | root=exists unsupported function on FROM : LATERAL
+REJ   SELECT * FROM UNNEST(ARRAY[1,2])
+      => code=1032005 msg=SQL 包含不支持的查询结构 | root=exists unsupported function on FROM : UNNEST
+REJ   SELECT * FROM sales TABLESAMPLE BERNOULLI(10)
+      => code=1032005 msg=SQL 包含不支持的查询结构 | root=exists unsupported function on FROM : TABLESAMPLE
+REJ   SELECT * FROM s_b.t_other
+      => code=1032003 msg=table s_b.t_other not exist.
+REJ   SELECT * FROM perm_t_sales
+      => code=1032003 msg=table perm_t_sales not exist.
+log4j:WARN No appenders could be found for logger (com.kingdee.abi).
+log4j:WARN Please initialize the log4j system properly.
+REJ   SELECT * FROM "user"
+      => code=1032004 msg=SQL 不允许调用敏感函数或上下文关键字：USER
+REJ   SELECT u."user" FROM "user" u
+      => code=1032004 msg=SQL 不允许调用敏感函数或上下文关键字：USER
+REJ   SELECT "user" FROM "user"
+      => code=1032004 msg=SQL 不允许调用敏感函数或上下文关键字：USER
+REJ   WITH "current_user" AS (SELECT 1 AS a) SELECT a FROM "current_user"
+      => code=1032004 msg=SQL 不允许调用敏感函数或上下文关键字：CURRENT_USER
+PASS  SELECT getvariable('x')
+      => SELECT getvariable('x')  tables=[]
+REJ   SELECT current_setting('threads')
+      => code=1032004 msg=SQL 不允许调用敏感函数或上下文关键字：CURRENT_SETTING
+REJ   SELECT read_text('/etc/passwd')
+      => code=1032004 msg=SQL 不允许调用敏感函数或上下文关键字：READ_TEXT
+REJ   SELECT * FROM 订单
+      => code=1032007 msg=table 订单 is not a table name, use 订单.<subTableName> instead.
+REJ   SELECT * FROM "订单"."汇总"
+      => code=1032002 msg=table 订单.汇总 not material.
+REJ   SELECT * FROM 库存
+      => code=1032002 msg=table 库存 not material.
+REJ   SELECT * FROM 不存在
+      => code=1032003 msg=table 不存在 not exist.
+REJ   WITH perm_t_sales AS (SELECT 1 AS id) SELECT * FROM sales
+      => code=1032004 msg=Replacement relation name conflicts with visible alias or CTE: perm_t_sales
+REJ   SELECT a::int FROM sales
+      => code=1032004 msg=SQL 语法无效，请检查查询语句 | root=Encountered ":" at line 1, column 9.
+PASS  SELECT 1
+      => SELECT 1  tables=[]
+REJ   SELECT 1; SELECT 2
+      => code=1032004 msg=SQL 语法无效，请检查查询语句 | root=Encountered ";" at line 1, column 9.
+PASS  SELECT 1;;;
+      => SELECT 1  tables=[]
+PASS  SELECT * FROM sales LIMIT 100000000
+      => SELECT * FROM perm_t_sales LIMIT 100000000  tables=[perm_t_sales]
